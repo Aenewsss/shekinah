@@ -9,6 +9,7 @@ const firebaseConfig = {
     projectId: process.env.NEXT_PUBLIC_projectId,
     storageBucket: process.env.NEXT_PUBLIC_storageBucket,
     messagingSenderId: process.env.NEXT_PUBLIC_messagingSenderId,
+    databaseURL: process.env.NEXT_PUBLIC_databaseURL,
     appId: process.env.NEXT_PUBLIC_appId,
 };
 

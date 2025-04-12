@@ -19,8 +19,21 @@ import {
   Instagram,
 } from "lucide-react"
 import FaqSection from "@/sections/faq"
+import { useBanners } from "@/hooks/userBanners.hook"
+import { useEffect, useState } from "react"
 
 export default function Home() {
+  const banners = useBanners("executivos"); // 🔸 categoria de banner
+  const [currentBanner, setCurrentBanner] = useState(0);
+
+  useEffect(() => {
+    if (!banners.length) return;
+    const interval = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % banners.length);
+    }, 5000); // troca a cada 5 segundos
+    return () => clearInterval(interval);
+  }, [banners]);
+
   return (
     <main className="min-h-screen bg-black text-white">
       {/* Header */}
@@ -52,15 +65,33 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative h-screen">
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/banners/executivos.png?height=1080&width=1920"
-            alt="Executive SUV"
-            fill
-            className="object-cover brightness-50"
-            priority
-          />
+          {banners[currentBanner] && (
+            <Image
+              unoptimized
+              src={banners[currentBanner]}
+              alt={`Banner ${currentBanner + 1}`}
+              fill
+              className="object-cover brightness-50 transition-opacity duration-700 ease-in-out"
+              priority
+            />
+          )}
+          {
+            !banners.length && (
+              <div className="absolute inset-0 z-0">
+                <Image
+                  unoptimized
+                  src="/banners/executivos.png?height=1080&width=1920"
+                  alt="Carro Blindado"
+                  fill
+                  className="object-cover brightness-50"
+                  priority
+                />
+              </div>
+            )
+          }
         </div>
-        <div className="relative z-1 container mx-auto px-4 h-full flex flex-col justify-center">
+
+        <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center">
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               EXPERIÊNCIA EXECUTIVA
@@ -79,12 +110,18 @@ export default function Home() {
         </div>
 
         {/* Vehicle indicator */}
-        <div className="absolute bottom-8 right-8 px-4 py-2 rounded">JEEP COMMANDER</div>
+        <div className="absolute bottom-8 right-8 px-4 py-2 rounded text-white text-sm">
+          JEEP COMMANDER
+        </div>
 
         {/* Dots navigation */}
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2">
-          {[1, 2, 3, 4, 5].map((dot) => (
-            <div key={dot} className={`w-2 h-2 rounded-full ${dot === 1 ? "bg-[#0168ec]" : "bg-white/50"}`} />
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-20">
+          {banners.map((_, index) => (
+            <div
+              key={index}
+              className={`w-2 h-2 rounded-full transition-colors duration-300 ${index === currentBanner ? "bg-[#0168ec]" : "bg-white/50"
+                }`}
+            />
           ))}
         </div>
       </section>

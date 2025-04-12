@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
     ChevronLeft,
     ChevronRight,
@@ -26,192 +26,134 @@ import {
     UserCheck,
     Car,
 } from "lucide-react"
+import { useBanners } from "@/hooks/userBanners.hook"
 
-function HumanVerificationModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-    if (!isOpen) return null
 
-    return (
-        <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
-            <div className="max-w-md w-full mx-auto p-6 text-center">
-                <h2 className="text-2xl font-medium text-amber-600 mb-4">Let's confirm you are human</h2>
+const vehicles = [
+    {
+        brand: "MERCEDES BENZ",
+        model: "SPRINTER",
+        specs: {
+            km: "500",
+            seats: "15",
+            horsePower: "190",
+        },
+        images: [
+            "/interior-range/1.png?height=400&width=800",
+            "/interior-range/2.png?height=400&width=800",
+            "/interior-range/3.png?height=400&width=800",
+            "/interior-range/4.png?height=400&width=800",
+        ],
+    },
+]
 
-                <p className="text-gray-700 mb-6">
-                    Complete the security check before continuing. This step verifies that you are not a bot, which helps to
-                    protect your account and prevent spam.
-                </p>
+const testimonials = [
+    {
+        name: "Pedro Silva",
+        rating: 5,
+        text: "Serviço excepcional! O carro blindado me deu total segurança durante minha viagem de negócios.",
+        image: "/feedbacks/1.png?height=100&width=100",
+    },
+    {
+        name: "Ana Costa",
+        rating: 5,
+        text: "A blindagem do veículo me deu tranquilidade para viajar com minha família.",
+        image: "/feedbacks/3.png?height=100&width=100",
+    },
 
-                <button
-                    onClick={onClose}
-                    className="bg-amber-500 text-white px-6 py-2 rounded flex items-center mx-auto mb-8 hover:bg-amber-600 transition-colors"
-                >
-                    Begin <ChevronRight className="ml-1" size={18} />
-                </button>
+    {
+        name: "Mário Oliveira",
+        rating: 5,
+        text: "Motorista profissional e veículo em perfeito estado. Recomendo!",
+        image: "/feedbacks/9.png?height=100&width=100",
+    },
+    {
+        name: "Carlos Mendes",
+        rating: 4,
+        text: "Excelente atendimento e pontualidade. O carro era muito confortável.",
+        image: "/feedbacks/4.png?height=100&width=100",
+    },
+    {
+        name: "Roberto Alves",
+        rating: 5,
+        text: "Serviço de primeira linha. Motorista educado e veículo impecável.",
+        image: "/feedbacks/5.png?height=100&width=100",
+    },
+    {
+        name: "Ana Ferreira",
+        rating: 5,
+        text: "Utilizei o serviço para uma viagem corporativa e fiquei impressionado com a qualidade e profissionalismo.",
+        image: "/feedbacks/3.png?height=100&width=100",
+    },
+    {
+        name: "Juliana Santos",
+        rating: 5,
+        text: "Me senti muito segura com o carro blindado durante todo o trajeto.",
+        image: "/feedbacks/6.png?height=100&width=100",
+    },
 
-                <div className="border-t border-gray-200 pt-4">
-                    <select className="border border-gray-300 rounded px-3 py-1 text-sm">
-                        <option>English</option>
-                        <option>Português</option>
-                        <option>Español</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    )
-}
+    {
+        name: "Marcos Pereira",
+        rating: 5,
+        text: "Atendimento personalizado e veículo de luxo com toda segurança necessária.",
+        image: "/feedbacks/2.png?height=100&width=100",
+    },
+    {
+        name: "Fernanda Lima",
+        rating: 5,
+        text: "Experiência incrível! O conforto do veículo blindado superou minhas expectativas.",
+        image: "/feedbacks/8.png?height=100&width=100",
+    },
+]
+
+
+const features = [
+    {
+        icon: <Users size={32} className="text-white" />,
+        title: "Transporte Executivo",
+        description: "Vans de luxo para eventos corporativos e transporte de executivos",
+    },
+    {
+        icon: <Calendar size={32} className="text-white" />,
+        title: "Receptivo de Aeroporto",
+        description: "Recepção e transporte de passageiros do aeroporto com conforto",
+    },
+    {
+        icon: <Map size={32} className="text-white" />,
+        title: "City Tour",
+        description: "Conheça os pontos turísticos de Brasília com conforto e segurança",
+    },
+    {
+        icon: <Award size={32} className="text-white" />,
+        title: "Eventos Sociais",
+        description: "Transporte para casamentos, formaturas e eventos especiais",
+    },
+    {
+        icon: <Truck size={32} className="text-white" />,
+        title: "Viagens Interestaduais",
+        description: "Viagens para cidades próximas com todo conforto necessário",
+    },
+    {
+        icon: <Shield size={32} className="text-white" />,
+        title: "Transporte Corporativo",
+        description: "Soluções de transporte para empresas e eventos corporativos",
+    },
+]
 
 export default function VansPage() {
-    const [showVerification, setShowVerification] = useState(false)
+    const banners = useBanners("vans"); // 🔸 categoria de banner
+
+    const [currentBanner, setCurrentBanner] = useState(0);
     const [activeVehicleIndex, setActiveVehicleIndex] = useState(0)
     const [activeThumbnail, setActiveThumbnail] = useState(0)
 
-    const vehicles = [
-        {
-            brand: "MERCEDES BENZ",
-            model: "SPRINTER",
-            specs: {
-                km: "500",
-                seats: "15",
-                horsePower: "190",
-            },
-            images: [
-                "/interior-range/1.png?height=400&width=800",
-                "/interior-range/2.png?height=400&width=800",
-                "/interior-range/3.png?height=400&width=800",
-                "/interior-range/4.png?height=400&width=800",
-            ],
-        },
-    ]
-
-    const testimonials = [
-        {
-            name: "Pedro Silva",
-            rating: 5,
-            text: "Serviço excepcional! O carro blindado me deu total segurança durante minha viagem de negócios.",
-            image: "/feedbacks/1.png?height=100&width=100",
-        },
-        {
-            name: "Ana Costa",
-            rating: 5,
-            text: "A blindagem do veículo me deu tranquilidade para viajar com minha família.",
-            image: "/feedbacks/3.png?height=100&width=100",
-        },
-
-        {
-            name: "Mário Oliveira",
-            rating: 5,
-            text: "Motorista profissional e veículo em perfeito estado. Recomendo!",
-            image: "/feedbacks/9.png?height=100&width=100",
-        },
-        {
-            name: "Carlos Mendes",
-            rating: 4,
-            text: "Excelente atendimento e pontualidade. O carro era muito confortável.",
-            image: "/feedbacks/4.png?height=100&width=100",
-        },
-        {
-            name: "Roberto Alves",
-            rating: 5,
-            text: "Serviço de primeira linha. Motorista educado e veículo impecável.",
-            image: "/feedbacks/5.png?height=100&width=100",
-        },
-        {
-            name: "Ana Ferreira",
-            rating: 5,
-            text: "Utilizei o serviço para uma viagem corporativa e fiquei impressionado com a qualidade e profissionalismo.",
-            image: "/feedbacks/3.png?height=100&width=100",
-        },
-        {
-            name: "Juliana Santos",
-            rating: 5,
-            text: "Me senti muito segura com o carro blindado durante todo o trajeto.",
-            image: "/feedbacks/6.png?height=100&width=100",
-        },
-   
-        {
-            name: "Marcos Pereira",
-            rating: 5,
-            text: "Atendimento personalizado e veículo de luxo com toda segurança necessária.",
-            image: "/feedbacks/2.png?height=100&width=100",
-        },
-        {
-            name: "Fernanda Lima",
-            rating: 5,
-            text: "Experiência incrível! O conforto do veículo blindado superou minhas expectativas.",
-            image: "/feedbacks/8.png?height=100&width=100",
-        },
-    ]
-
-    const features = [
-        {
-            icon: <Users size={32} className="text-white" />,
-            title: "Transporte Executivo",
-            description: "Vans de luxo para eventos corporativos e transporte de executivos",
-        },
-        {
-            icon: <Calendar size={32} className="text-white" />,
-            title: "Receptivo de Aeroporto",
-            description: "Recepção e transporte de passageiros do aeroporto com conforto",
-        },
-        {
-            icon: <Map size={32} className="text-white" />,
-            title: "City Tour",
-            description: "Conheça os pontos turísticos de Brasília com conforto e segurança",
-        },
-        {
-            icon: <Award size={32} className="text-white" />,
-            title: "Eventos Sociais",
-            description: "Transporte para casamentos, formaturas e eventos especiais",
-        },
-        {
-            icon: <Truck size={32} className="text-white" />,
-            title: "Viagens Interestaduais",
-            description: "Viagens para cidades próximas com todo conforto necessário",
-        },
-        {
-            icon: <Shield size={32} className="text-white" />,
-            title: "Transporte Corporativo",
-            description: "Soluções de transporte para empresas e eventos corporativos",
-        },
-    ]
-
-    const blogPosts = [
-        {
-            title: "Vantagens do transporte executivo",
-            excerpt: "Descubra como o transporte executivo pode aumentar a produtividade e conforto em viagens corporativas.",
-            image: "/placeholder.svg?height=200&width=300",
-            date: "10/04/2023",
-        },
-        {
-            title: "Como escolher a van ideal",
-            excerpt: "Entenda as diferenças entre os modelos de vans e qual é o mais adequado para suas necessidades.",
-            image: "/placeholder.svg?height=200&width=300",
-            date: "15/05/2023",
-        },
-        {
-            title: "Dicas para viagens em grupo",
-            excerpt: "Confira nossas dicas para tornar sua viagem em grupo mais confortável e organizada.",
-            image: "/placeholder.svg?height=200&width=300",
-            date: "22/06/2023",
-        },
-    ]
-
-    const vehicleCategories = [
-        {
-            title: "Carros Populares",
-            description: "Clique e saiba mais sobre a categoria de carros populares disponíveis em nosso modelo.",
-            image: "/placeholder.svg?height=300&width=400",
-        },
-        {
-            title: "Carros Executivos",
-            description: "Clique e saiba mais sobre a categoria de carros executivos disponíveis em nosso modelo.",
-            image: "/placeholder.svg?height=300&width=400",
-        },
-        {
-            title: "Carros Blindados",
-            description: "Clique e saiba mais sobre a categoria de carros blindados disponíveis em nosso modelo.",
-            image: "/placeholder.svg?height=300&width=400",
-        },
-    ]
+    useEffect(() => {
+        if (!banners.length) return;
+        const interval = setInterval(() => {
+            setCurrentBanner((prev) => (prev + 1) % banners.length);
+        }, 5000); // troca a cada 5 segundos
+        return () => clearInterval(interval);
+    }, [banners]);
 
     const renderStars = (rating: number) => {
         return Array(5)
@@ -223,8 +165,6 @@ export default function VansPage() {
 
     return (
         <main className="min-h-screen bg-black text-white">
-            <HumanVerificationModal isOpen={showVerification} onClose={() => setShowVerification(false)} />
-
             {/* Header */}
             <header className="absolute top-0 left-0 right-0 z-10">
                 <div className="container mx-auto px-4 py-6 flex justify-between items-center">
@@ -249,7 +189,6 @@ export default function VansPage() {
                             className="text-white hover:text-[#0168ec] transition-colors"
                             onClick={(e) => {
                                 e.preventDefault()
-                                setShowVerification(true)
                             }}
                         >
                             CONTATO
@@ -261,13 +200,30 @@ export default function VansPage() {
             {/* Hero Section */}
             <section className="relative h-screen">
                 <div className="absolute inset-0 z-0">
-                    <Image
-                        src="/banners/vans.png?height=1080&width=1920"
-                        alt="Van Executiva"
-                        fill
-                        className="object-cover brightness-50"
-                        priority
-                    />
+                    {banners[currentBanner] && (
+                        <Image
+                            unoptimized
+                            src={banners[currentBanner]}
+                            alt={`Banner ${currentBanner + 1}`}
+                            fill
+                            className="object-cover brightness-50 transition-opacity duration-700 ease-in-out"
+                            priority
+                        />
+                    )}
+                    {
+                        !banners.length && (
+                            <div className="absolute inset-0 z-0">
+                                <Image
+                                    unoptimized
+                                    src="/banners/vans.png?height=1080&width=1920"
+                                    alt="Carro Blindado"
+                                    fill
+                                    className="object-cover brightness-50"
+                                    priority
+                                />
+                            </div>
+                        )
+                    }
                 </div>
                 <div className="relative z-1 container mx-auto px-4 h-full flex flex-col justify-center">
                     <div className="max-w-2xl">
@@ -283,7 +239,6 @@ export default function VansPage() {
                         <div className="flex flex-wrap gap-4">
                             <button
                                 className="bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
-                                onClick={() => setShowVerification(true)}
                             >
                                 FAÇA UM ORÇAMENTO
                             </button>
@@ -330,22 +285,34 @@ export default function VansPage() {
                     </div>
                 </div>
 
-                {/* WhatsApp Button */}
-                <div className="absolute bottom-6 right-6 z-50">
-                    <Link href="#" className="block bg-[#25D366] p-4 rounded-full shadow-lg hover:bg-opacity-90 transition-all">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M16 30C23.732 30 30 23.732 30 16C30 8.26801 23.732 2 16 2C8.26801 2 2 8.26801 2 16C2 18.5522 2.63234 20.9666 3.76401 23.0742L2.28601 29.714L9.05998 28.2701C11.1146 29.3426 13.4746 30 16 30Z"
-                                fill="white"
-                            />
-                            <path
-                                d="M23 20.2C22.7 20.05 21.15 19.3 20.9 19.2C20.6 19.1 20.4 19.05 20.2 19.35C20 19.65 19.4 20.35 19.25 20.55C19.1 20.75 18.9 20.8 18.65 20.65C18.4 20.5 17.35 20.15 16.15 19.1C15.2 18.25 14.55 17.2 14.35 16.95C14.2 16.7 14.3 16.55 14.45 16.4C14.55 16.3 14.7 16.1 14.8 15.95C14.9 15.8 14.95 15.7 15.05 15.5C15.15 15.3 15.1 15.15 15.05 15C15 14.85 14.35 13.3 14.1 12.8C13.85 12.3 13.6 12.4 13.45 12.4C13.3 12.4 13.1 12.35 12.9 12.35C12.7 12.35 12.4 12.4 12.15 12.65C11.9 12.9 11.1 13.65 11.1 15.2C11.1 16.75 12.2 18.25 12.35 18.45C12.5 18.65 14.35 21.45 17.15 22.8C17.85 23.1 18.4 23.3 18.85 23.45C19.55 23.7 20.2 23.65 20.7 23.6C21.25 23.55 22.5 22.9 22.75 22.3C23 21.7 23 21.2 22.95 21.1C22.9 21 22.7 20.95 22.4 20.8C22.1 20.65 22.1 20.65 22.1 20.65C22.1 20.65 23.3 20.35 23 20.2Z"
-                                fill="#25D366"
-                            />
-                        </svg>
-                    </Link>
+                {/* Dots navigation */}
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-20">
+                    {banners.map((_, index) => (
+                        <div
+                            key={index}
+                            className={`w-2 h-2 rounded-full transition-colors duration-300 ${index === currentBanner ? "bg-[#0168ec]" : "bg-white/50"
+                                }`}
+                        />
+                    ))}
                 </div>
+
             </section>
+
+            {/* WhatsApp Button */}
+            <div className="fixed bottom-6 right-6 z-50">
+                <Link href="#" className="block bg-[#25D366] p-4 rounded-full shadow-lg hover:bg-opacity-90 transition-all">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M16 30C23.732 30 30 23.732 30 16C30 8.26801 23.732 2 16 2C8.26801 2 2 8.26801 2 16C2 18.5522 2.63234 20.9666 3.76401 23.0742L2.28601 29.714L9.05998 28.2701C11.1146 29.3426 13.4746 30 16 30Z"
+                            fill="white"
+                        />
+                        <path
+                            d="M23 20.2C22.7 20.05 21.15 19.3 20.9 19.2C20.6 19.1 20.4 19.05 20.2 19.35C20 19.65 19.4 20.35 19.25 20.55C19.1 20.75 18.9 20.8 18.65 20.65C18.4 20.5 17.35 20.15 16.15 19.1C15.2 18.25 14.55 17.2 14.35 16.95C14.2 16.7 14.3 16.55 14.45 16.4C14.55 16.3 14.7 16.1 14.8 15.95C14.9 15.8 14.95 15.7 15.05 15.5C15.15 15.3 15.1 15.15 15.05 15C15 14.85 14.35 13.3 14.1 12.8C13.85 12.3 13.6 12.4 13.45 12.4C13.3 12.4 13.1 12.35 12.9 12.35C12.7 12.35 12.4 12.4 12.15 12.65C11.9 12.9 11.1 13.65 11.1 15.2C11.1 16.75 12.2 18.25 12.35 18.45C12.5 18.65 14.35 21.45 17.15 22.8C17.85 23.1 18.4 23.3 18.85 23.45C19.55 23.7 20.2 23.65 20.7 23.6C21.25 23.55 22.5 22.9 22.75 22.3C23 21.7 23 21.2 22.95 21.1C22.9 21 22.7 20.95 22.4 20.8C22.1 20.65 22.1 20.65 22.1 20.65C22.1 20.65 23.3 20.35 23 20.2Z"
+                            fill="#25D366"
+                        />
+                    </svg>
+                </Link>
+            </div>
 
             {/* Fleet Section */}
             <section className="py-16">
@@ -446,7 +413,6 @@ export default function VansPage() {
                         <div className="text-center">
                             <button
                                 className="bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center"
-                                onClick={() => setShowVerification(true)}
                             >
                                 QUERO SABER MAIS
                                 <ArrowRight className="ml-2" size={16} />

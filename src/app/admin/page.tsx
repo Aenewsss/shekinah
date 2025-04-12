@@ -1,12 +1,16 @@
 "use client"
 import { useEffect, useState } from "react";
-import { ref, onValue, push } from "firebase/database";
-import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, onValue, push, remove } from "firebase/database";
+import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { auth, db, storage } from "@/firebase";
 import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
 import { Label } from "@/components/label";
+import { toast } from "react-toastify";
+import { CircleLoader } from "react-spinners";
+import { div } from "framer-motion/client";
+import Loader from "@/components/loader";
 
 const categories = [{ label: "executivos", color: "#BE9C71" }, { label: "vans", color: "#F0F0F0" }, { label: "populares", color: "#0168EC" }, { label: "blindados", color: "#252525" }];
 const MAX_FILE_SIZE_MB = 2;
@@ -44,6 +48,7 @@ export default function AdminDashboard() {
     const [blogPosts, setBlogPosts] = useState([]);
     const [newPost, setNewPost] = useState({ title: "", content: "" });
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -77,13 +82,21 @@ export default function AdminDashboard() {
     }, [user]);
 
     const handleUploadBanner = async (category) => {
-        if (!newBanners[category.label]) return;
-        const file = newBanners[category.label];
-        const storageReference = storageRef(storage, `banners/${category.label}/${file.name}`);
-        await uploadBytes(storageReference, file);
-        const url = await getDownloadURL(storageReference);
-        await push(ref(db, `banners/${category.label}`), { url });
-        setNewBanners((prev) => ({ ...prev, [category.label]: null }));
+        setLoading(true)
+        try {
+            if (!newBanners[category.label]) return;
+            const file = newBanners[category.label];
+            const storageReference = storageRef(storage, `banners/${category.label}/${file.name}`);
+            await uploadBytes(storageReference, file);
+            const url = await getDownloadURL(storageReference);
+            await push(ref(db, `banners/${category.label}`), { url });
+            toast.success("Banner adicionado com sucesso!");
+            setNewBanners((prev) => ({ ...prev, [category.label]: null }));
+        } catch (err) {
+            toast.error("Erro ao adicionar banner");
+        } finally {
+            setLoading(false)
+        }
     };
 
     const handleAddFleet = async (category) => {
@@ -128,6 +141,30 @@ export default function AdminDashboard() {
         setter(file);
     };
 
+    const [hoveredBanner, setHoveredBanner] = useState<string | null>(null);
+
+    const handleDeleteBanner = async (categoryLabel: string, bannerId: string, imageUrl: string) => {
+        setLoading(true)
+        try {
+            // Remover do storage
+            const urlPath = new URL(imageUrl).pathname;
+            const storagePath = decodeURIComponent(urlPath.split("/o/")[1]); // preserva as barras
+            const storageReference = storageRef(storage, storagePath);
+            
+            await deleteObject(storageReference);
+
+            // Remover do database
+            const bannerRef = ref(db, `/banners/${categoryLabel}/${bannerId}`);
+            await remove(bannerRef);
+
+            console.log("Banner removido com sucesso");
+        } catch (err) {
+            console.error("Erro ao remover banner:", err);
+        } finally {
+            setLoading(false)
+        }
+    };
+
     if (!user) {
         return (
             <div className="max-w-sm mx-auto mt-20 space-y-4 flex justify-center items-center flex-col">
@@ -139,21 +176,22 @@ export default function AdminDashboard() {
 
     return (
         <main className="p-4 py-10 space-y-20 relative">
+            {loading && <Loader />}
             <h1 className="text-4xl font-bold text-center">Admin Shekinah</h1>
 
             <div className="text-right fixed top-4 right-4">
                 <Button className="bg-red-500 hover:bg-red-700" onClick={handleLogout}>Sair</Button>
             </div>
 
-            <section className="flex gap-10">
+            <section className="flex gap-10 xl:flex-nowrap flex-wrap">
                 {categories.map((category) => (
-                    <div key={category.label} className="space-y-6 border border-gray-300 p-4 rounded-2xl shadow-lg shadow-gray-900">
+                    <div key={category.label} className="space-y-6 border border-gray-300 p-4 rounded-2xl shadow-lg shadow-gray-900 w-[500px]">
                         <h2 className="text-2xl capitalize font-bold" style={{ color: category.color }}>{category.label}</h2>
 
                         {/* Banners */}
                         <section className="space-y-2">
                             <h3 className="text-xl font-semibold mb-2">Banners</h3>
-                            <Label htmlFor={`banner-${category.label}`}>Escolher banner imagem do banner</Label>
+                            <Label htmlFor={`banner-${category.label}`}>Escolher imagem do banner</Label>
                             <Input
                                 id={`banner-${category.label}`}
                                 type="file"
@@ -168,7 +206,22 @@ export default function AdminDashboard() {
                             <Button color={category.color} className="mt-4" onClick={() => handleUploadBanner(category)}>Salvar Banner</Button>
                             <ul className="mt-2 flex gap-2 flex-wrap">
                                 {(banners[category.label] || []).map((b) => (
-                                    <li key={b.id}><img src={b.url} alt="banner" className="w-40" /></li>
+                                    <li
+                                        key={b.id}
+                                        onMouseEnter={() => setHoveredBanner(b.id)}
+                                        onMouseLeave={() => setHoveredBanner(null)}
+                                        className="relative group cursor-pointer"
+                                    >
+                                        <img src={b.url} alt="banner" className="w-40 rounded-md" />
+                                        {hoveredBanner === b.id && (
+                                            <button
+                                                onClick={() => handleDeleteBanner(category.label, b.id, b.url)}
+                                                className=" cursor-pointer hover:scale-105 transition-all absolute top-1 right-1 bg-red-600 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center shadow hover:bg-red-700"
+                                            >
+                                                ×
+                                            </button>
+                                        )}
+                                    </li>
                                 ))}
                             </ul>
                         </section>

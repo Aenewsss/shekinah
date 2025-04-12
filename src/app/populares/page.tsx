@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
     Calendar,
     ChevronLeft,
@@ -18,9 +18,21 @@ import {
     Twitter,
     PhoneIcon as WhatsApp,
 } from "lucide-react"
+import { useBanners } from "@/hooks/userBanners.hook"
 
 export default function PopularesPage() {
+    const banners = useBanners("populares"); // 🔸 categoria de banner
+
     const [selectedCategory, setSelectedCategory] = useState("POPULAR")
+    const [currentBanner, setCurrentBanner] = useState(0);
+
+    useEffect(() => {
+        if (!banners.length) return;
+        const interval = setInterval(() => {
+            setCurrentBanner((prev) => (prev + 1) % banners.length);
+        }, 5000); // troca a cada 5 segundos
+        return () => clearInterval(interval);
+    }, [banners]);
 
     return (
         <main className="min-h-screen bg-white text-black">
@@ -49,13 +61,27 @@ export default function PopularesPage() {
                     </div>
 
                     <div className="absolute right-0 top-0">
-                        <Image
-                            src="/banners/populares.png?height=600&width=800"
-                            alt="Carro Popular"
-                            width={800}
-                            height={600}
-                            className="object-contain"
-                        />
+                        {banners[currentBanner] && (
+                            <Image
+                                unoptimized
+                                src={banners[currentBanner]}
+                                alt={`Banner ${currentBanner + 1}`}
+                                fill
+                                className="object-cover brightness-50 transition-opacity duration-700 ease-in-out"
+                                priority
+                            />
+                        )}
+                        {
+                            !banners.length && (
+                                <Image
+                                    src="/banners/populares.png?height=600&width=800"
+                                    alt="Carro Popular"
+                                    width={800}
+                                    height={600}
+                                    className="object-contain"
+                                />
+                            )
+                        }
                     </div>
                 </div>
                 <div className="container mx-auto px-4">
@@ -73,6 +99,17 @@ export default function PopularesPage() {
                             />
                         ))}
                     </div>
+                </div>
+
+                {/* Dots navigation */}
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-20">
+                    {banners.map((_, index) => (
+                        <div
+                            key={index}
+                            className={`w-2 h-2 rounded-full transition-colors duration-300 ${index === currentBanner ? "bg-[#0168ec]" : "bg-white/50"
+                                }`}
+                        />
+                    ))}
                 </div>
             </section>
 
@@ -402,7 +439,7 @@ export default function PopularesPage() {
                             </div>
                         </div>
                         <Image
-                        unoptimized
+                            unoptimized
                             src="/equipe.png?height=456&width=702"
                             alt="Sobre nós 1"
                             width={702}
