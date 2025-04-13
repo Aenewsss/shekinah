@@ -18,7 +18,8 @@ import {
     Twitter,
     PhoneIcon as WhatsApp,
 } from "lucide-react"
-import { useBanners } from "@/hooks/userBanners.hook"
+import { useBanners } from "@/hooks/useBanners.hook"
+import { useBlog } from "@/hooks/useBlog"
 
 const testimonials = [
     {
@@ -81,6 +82,7 @@ const testimonials = [
 
 export default function PopularesPage() {
     const banners = useBanners("populares"); // 🔸 categoria de banner
+    const posts = useBlog(); // 🔸 categoria de banner
 
     const [selectedCategory, setSelectedCategory] = useState("POPULAR")
     const [currentBanner, setCurrentBanner] = useState(0);
@@ -566,22 +568,22 @@ export default function PopularesPage() {
 
                     <div className="relative">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {[1, 2, 3].map((post) => (
-                                <div key={post} className=" rounded-lg overflow-hidden">
+                            {posts.map((post) => (
+                                <div key={post} className="text-white rounded-lg overflow-hidden">
                                     <div className="relative">
                                         <Image
                                             unoptimized
-                                            src={`/blog/${post}.png?height=300&width=400`}
+                                            src={post?.image}
                                             alt={`Blog post ${post}`}
                                             width={500}
                                             height={550}
                                             className="object-cover"
                                         />
                                     </div>
-                                    <div className="p-4 text-white">
-                                        <h3 className="text-lg font-bold mb-2">TÍTULO DO BLOG</h3>
-                                        <p className="text-sm mb-3">WITH VEHICLE RECOMMENDATIONS AND ALSO A CHOICE OF TOURIST DESTINATIONS, YOU MAY HAVE TO MAKE THE CONVENIENCE TO LIVE YOUR DREAM NOW</p>
-                                        <Link href="#" className="text-[#0168ec] text-sm hover:underline">
+                                    <div className="p-4">
+                                        <h3 className="capitalize text-lg font-bold mb-2">{post?.title}</h3>
+                                        <p className="text-sm mb-3" dangerouslySetInnerHTML={{ __html: post?.content.slice(0, 50) + "..." }}></p>
+                                        <Link href="#" className=" text-sm hover:underline">
                                             Leia mais
                                         </Link>
                                     </div>
@@ -589,10 +591,10 @@ export default function PopularesPage() {
                             ))}
                         </div>
 
-                        <button className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full md:-left-6">
+                        <button className="absolute left-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full md:-left-6">
                             <ChevronLeft size={24} />
                         </button>
-                        <button className="cursor-pointer absolute right-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full md:-right-6">
+                        <button className="absolute right-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full md:-right-6">
                             <ChevronRight size={24} />
                         </button>
                     </div>

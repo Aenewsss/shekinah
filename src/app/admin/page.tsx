@@ -8,13 +8,12 @@ import { auth, db, storage } from "@/firebase";
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { Label } from "@/components/label";
 import { toast, ToastContainer } from "react-toastify";
-import { CircleLoader } from "react-spinners";
-import { div } from "framer-motion/client";
 import Loader from "@/components/loader";
+import BlogSection from "./blog.section";
 
 const categories = [{ label: "executivos", color: "#BE9C71" }, { label: "vans", color: "#F0F0F0" }, { label: "populares", color: "#0168EC" }, { label: "blindados", color: "#252525" }];
-const MAX_FILE_SIZE_MB = 2;
-const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024; // 1MB
+export const MAX_FILE_SIZE_MB = 2;
+export const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024; // 1MB
 
 async function convertToWebP(file) {
     return new Promise((resolve) => {
@@ -46,7 +45,7 @@ export default function AdminDashboard() {
     const [fleet, setFleet] = useState({});
     const [newFleet, setNewFleet] = useState({});
     const [blogPosts, setBlogPosts] = useState([]);
-    const [newPost, setNewPost] = useState({ title: "", content: "" });
+    const [newPost, setNewPost] = useState({});
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
@@ -124,9 +123,24 @@ export default function AdminDashboard() {
         }
     }
 
-    const handleAddPost = async () => {
-        await push(ref(db, "blogPosts"), { title: newPost.title, content: newPost.content });
-        setNewPost({ title: "", content: "" });
+    const handleAddPost = async (data: any) => {
+        setLoading(true)
+        try {
+            if (!data?.image) return;
+            const storageReference = storageRef(storage, `blog/${data.image.name}`);
+            await uploadBytes(storageReference, data.image);
+            const url = await getDownloadURL(storageReference);
+            await push(ref(db, "blogPosts"), {
+                title: data.title,
+                content: data.content,
+                image: url,
+            });
+            setNewPost({ title: "", content: "" });
+        } catch (err) {
+            toast.error("Erro ao adicionar post")
+        } finally {
+            setLoading(false)
+        }
     };
 
     const handleLogin = async () => {
@@ -359,30 +373,7 @@ export default function AdminDashboard() {
             </section>
 
             {/* Blog */}
-            <section className="space-y-2 border border-gray-300 p-4 rounded-2xl shadow-lg shadow-gray-900">
-                <h2 className="text-2xl font-bold">Blog</h2>
-                <Input
-                    placeholder="Título"
-                    value={newPost.title}
-                    onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
-                />
-                <textarea
-                    placeholder="Conteúdo"
-                    className="w-full p-2 border rounded"
-                    value={newPost.content}
-                    onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
-                />
-                <Button onClick={handleAddPost}>Publicar</Button>
-                <ul className="mt-4 space-y-2">
-                    {blogPosts.map((p) => (
-                        <li key={p.id} className="border p-2 rounded">
-                            <h3 className="font-bold text-lg">{p.title}</h3>
-                            <p>{p.content}</p>
-                        </li>
-                    ))}
-
-                </ul>
-            </section>
+            <BlogSection blogPosts={blogPosts} handleAddPost={handleAddPost} />
             <ToastContainer />
         </main>
     );

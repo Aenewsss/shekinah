@@ -26,8 +26,9 @@ import {
     UserCheck,
     Car,
 } from "lucide-react"
-import { useBanners } from "@/hooks/userBanners.hook"
-import { useFleets } from "@/hooks/userFleets.hook"
+import { useBanners } from "@/hooks/useBanners.hook"
+import { useFleets } from "@/hooks/useFleets.hook"
+import { useBlog } from "@/hooks/useBlog"
 
 const testimonials = [
     {
@@ -124,6 +125,7 @@ const features = [
 export default function VansPage() {
     const banners = useBanners("vans"); // 🔸 categoria de banner
     const fleets = useFleets("vans"); // 🔸 categoria de banner
+    const posts = useBlog(); // 🔸 categoria de banner
 
     const [currentFleet, setCurrentFleet] = useState(0);
     const [currentBanner, setCurrentBanner] = useState(0);
@@ -586,12 +588,12 @@ export default function VansPage() {
 
                     <div className="relative">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {[1, 2, 3].map((post) => (
+                            {posts.map((post) => (
                                 <div key={post} className="bg-[#151515] rounded-lg overflow-hidden">
                                     <div className="relative">
                                         <Image
                                             unoptimized
-                                            src={`/blog/${post}.png?height=300&width=400`}
+                                            src={post?.image}
                                             alt={`Blog post ${post}`}
                                             width={500}
                                             height={550}
@@ -599,8 +601,8 @@ export default function VansPage() {
                                         />
                                     </div>
                                     <div className="p-4">
-                                        <h3 className="text-lg font-bold mb-2">TÍTULO DO BLOG</h3>
-                                        <p className="text-sm text-gray-400 mb-3">WITH VEHICLE RECOMMENDATIONS AND ALSO A CHOICE OF TOURIST DESTINATIONS, YOU MAY HAVE TO MAKE THE CONVENIENCE TO LIVE YOUR DREAM NOW</p>
+                                        <h3 className="capitalize text-lg font-bold mb-2">{post?.title}</h3>
+                                        <p className="text-sm text-gray-400 mb-3" dangerouslySetInnerHTML={{ __html: post?.content.slice(0, 50) + "..." }}></p>
                                         <Link href="#" className="text-[#0168ec] text-sm hover:underline">
                                             Leia mais
                                         </Link>
