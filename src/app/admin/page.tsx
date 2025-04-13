@@ -12,8 +12,8 @@ import Loader from "@/components/loader";
 import BlogSection from "./blog.section";
 
 const categories = [{ label: "executivos", color: "#BE9C71" }, { label: "vans", color: "#F0F0F0" }, { label: "populares", color: "#0168EC" }, { label: "blindados", color: "#252525" }];
-export const MAX_FILE_SIZE_MB = 2;
-export const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024; // 1MB
+const MAX_FILE_SIZE_MB = 2;
+const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024; // 1MB
 
 async function convertToWebP(file) {
     return new Promise((resolve) => {

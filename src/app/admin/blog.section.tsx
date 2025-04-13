@@ -4,7 +4,9 @@ import { Label } from '@/components/label'
 import QuillEditor from './QuillEditor'
 import { useState } from 'react'
 import { Input } from '@/components/input'
-import { MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from './page'
+
+const MAX_FILE_SIZE_MB = 2;
+const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024; // 1MB
 
 export default function BlogSection({ handleAddPost, blogPosts }: any) {
     const [newPost, setNewPost] = useState({ title: '', content: '', image: null })
