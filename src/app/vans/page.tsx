@@ -27,25 +27,7 @@ import {
     Car,
 } from "lucide-react"
 import { useBanners } from "@/hooks/userBanners.hook"
-
-
-const vehicles = [
-    {
-        brand: "MERCEDES BENZ",
-        model: "SPRINTER",
-        specs: {
-            km: "500",
-            seats: "15",
-            horsePower: "190",
-        },
-        images: [
-            "/interior-range/1.png?height=400&width=800",
-            "/interior-range/2.png?height=400&width=800",
-            "/interior-range/3.png?height=400&width=800",
-            "/interior-range/4.png?height=400&width=800",
-        ],
-    },
-]
+import { useFleets } from "@/hooks/userFleets.hook"
 
 const testimonials = [
     {
@@ -106,7 +88,6 @@ const testimonials = [
     },
 ]
 
-
 const features = [
     {
         icon: <Users size={32} className="text-white" />,
@@ -142,10 +123,10 @@ const features = [
 
 export default function VansPage() {
     const banners = useBanners("vans"); // 🔸 categoria de banner
+    const fleets = useFleets("vans"); // 🔸 categoria de banner
 
+    const [currentFleet, setCurrentFleet] = useState(0);
     const [currentBanner, setCurrentBanner] = useState(0);
-    const [activeVehicleIndex, setActiveVehicleIndex] = useState(0)
-    const [activeThumbnail, setActiveThumbnail] = useState(0)
 
     useEffect(() => {
         if (!banners.length) return;
@@ -161,6 +142,14 @@ export default function VansPage() {
             .map((_, i) => (
                 <Star key={i} size={16} className={i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"} />
             ))
+    }
+
+    function handleFleetChange(direction: "left" | "right") {
+        if (direction === "left") {
+            setCurrentFleet((prev) => (prev - 1 + fleets.length) % fleets.length);
+        } else {
+            setCurrentFleet((prev) => (prev + 1) % fleets.length);
+        }
     }
 
     return (
@@ -318,90 +307,70 @@ export default function VansPage() {
             <section className="py-16">
                 <div className="container mx-auto px-4">
                     <h2 className="text-2xl font-bold mb-8 text-[#0168ec]">FROTAS DE VEÍCULOS</h2>
-                    <div className="flex space-x-4 mb-12">
-                        <Link
-                            href="/"
-                            className="bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium"
-                        >
-                            EXECUTIVO
-                        </Link>
-                        <Link
-                            href="/"
-                            className="bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium"
-                        >
-                            POPULAR
-                        </Link>
-                        <Link
-                            href="/blindados"
-                            className="bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium"
-                        >
-                            BLINDADOS
-                        </Link>
-                        <Link href="/vans" className="bg-[#0168ec] text-white px-6 py-2 rounded-md font-medium">
-                            VANS
-                        </Link>
-                    </div>
+                    {/* <div className="flex space-x-4 mb-12">
+            <button className="cursor-pointer bg-[#0168ec] text-white px-6 py-2 rounded-md font-medium">SEDAN</button>
+            <button className="cursor-pointer bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium">
+              SUV
+            </button>
+            <button className="cursor-pointer bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium">
+              LUXO
+            </button>
+          </div> */}
 
                     {/* Vehicle Showcase */}
                     <div className="relative">
                         <div className="flex justify-between items-start mb-12">
-                            <div>
-                                <h3 className="text-xl font-medium text-gray-400">{vehicles[activeVehicleIndex].brand}</h3>
-                                <h2 className="text-7xl font-bold">{vehicles[activeVehicleIndex].model}</h2>
-                            </div>
-                            <div className="space-y-6">
-                                <div className="text-center">
-                                    <h4 className="text-gray-400 text-sm">SPECS</h4>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold">{vehicles[activeVehicleIndex].specs.km}</div>
-                                    <div className="text-sm text-gray-400">KM</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold">{vehicles[activeVehicleIndex].specs.seats}</div>
-                                    <div className="text-sm text-gray-400">SEATS</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold">{vehicles[activeVehicleIndex].specs.horsePower}</div>
-                                    <div className="text-sm text-gray-400">HORSE POWER</div>
-                                </div>
-                            </div>
+                            {/* <div className="space-y-6">
+                <div className="text-center">
+                  <h4 className="text-gray-400 text-sm">SPECS</h4>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">500</div>
+                  <div className="text-sm text-gray-400">KM</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">5</div>
+                  <div className="text-sm text-gray-400">SEATS</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">328</div>
+                  <div className="text-sm text-gray-400">HORSE POWER</div>
+                </div>
+              </div> */}
                         </div>
 
                         <div className="relative mb-8">
+                            <div className="text-center -mb-20">
+                                <h3 className="text-3xl font-medium text-gray-400">{fleets[currentFleet]?.brand || "Mercedez"}</h3>
+                                <h2 className="text-9xl font-bold">{fleets[currentFleet]?.model || "Splinter"}</h2>
+                            </div>
                             <Image
                                 unoptimized
-                                src={"/mercedez-splinter.png"}
-                                alt={`${vehicles[activeVehicleIndex].brand} ${vehicles[activeVehicleIndex].model}`}
+                                src={fleets[currentFleet]?.image || "/mercedez-splinter.png?height=400&width=800"}
+                                alt="Mercedes S580"
                                 width={800}
                                 height={400}
                                 className="mx-auto object-contain"
                             />
-                            <button
-                                className="absolute left-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full"
-                                onClick={() => setActiveVehicleIndex((prev) => (prev === 0 ? vehicles.length - 1 : prev - 1))}
-                            >
-                                <ChevronLeft size={24} />
-                            </button>
-                            <button
-                                className="absolute right-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full"
-                                onClick={() => setActiveVehicleIndex((prev) => (prev === vehicles.length - 1 ? 0 : prev + 1))}
-                            >
-                                <ChevronRight size={24} />
-                            </button>
+                            {fleets.length > 1 &&
+                                <>
+                                    <button onClick={() => handleFleetChange("left")} className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full">
+                                        <ChevronLeft size={24} />
+                                    </button>
+                                    <button onClick={() => handleFleetChange("right")} className="cursor-pointer absolute right-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full">
+                                        <ChevronRight size={24} />
+                                    </button>
+                                </>
+                            }
                         </div>
 
                         <div className="grid grid-cols-4 gap-4 mb-8">
-                            {vehicles[activeVehicleIndex].images.map((img, index) => (
-                                <div
-                                    key={index}
-                                    className={`border-2 ${activeThumbnail === index ? "border-[#0168ec]" : "border-white"
-                                        } rounded-lg overflow-hidden cursor-pointer`}
-                                    onClick={() => setActiveThumbnail(index)}
-                                >
+                            {[1, 2, 3, 4].map((img) => (
+                                <div key={img} className="border-8 border-white rounded-lg overflow-hidden">
                                     <Image
-                                        src={img || "/placeholder.svg"}
-                                        alt={`Interior ${index + 1}`}
+                                        unoptimized
+                                        src={`/interior-mercedez/${img}.png?height=100&width=200`}
+                                        alt={`Interior ${img}`}
                                         width={200}
                                         height={100}
                                         className="w-full h-full object-cover"
@@ -411,9 +380,7 @@ export default function VansPage() {
                         </div>
 
                         <div className="text-center">
-                            <button
-                                className="bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center"
-                            >
+                            <button className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center">
                                 QUERO SABER MAIS
                                 <ArrowRight className="ml-2" size={16} />
                             </button>

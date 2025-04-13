@@ -21,9 +21,13 @@ import {
 import FaqSection from "@/sections/faq"
 import { useBanners } from "@/hooks/userBanners.hook"
 import { useEffect, useState } from "react"
+import { useFleets } from "@/hooks/userFleets.hook"
 
 export default function Home() {
   const banners = useBanners("executivos"); // 🔸 categoria de banner
+  const fleets = useFleets("executivos"); // 🔸 categoria de banner
+
+  const [currentFleet, setCurrentFleet] = useState(0);
   const [currentBanner, setCurrentBanner] = useState(0);
 
   useEffect(() => {
@@ -33,6 +37,14 @@ export default function Home() {
     }, 5000); // troca a cada 5 segundos
     return () => clearInterval(interval);
   }, [banners]);
+
+  function handleFleetChange(direction: "left" | "right") {
+    if (direction === "left") {
+      setCurrentFleet((prev) => (prev - 1 + fleets.length) % fleets.length);
+    } else {
+      setCurrentFleet((prev) => (prev + 1) % fleets.length);
+    }
+  }
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -271,7 +283,7 @@ export default function Home() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold mb-8 text-[#0168ec]">FROTAS DE VEÍCULOS</h2>
-          <div className="flex space-x-4 mb-12">
+          {/* <div className="flex space-x-4 mb-12">
             <button className="cursor-pointer bg-[#0168ec] text-white px-6 py-2 rounded-md font-medium">SEDAN</button>
             <button className="cursor-pointer bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium">
               SUV
@@ -279,16 +291,12 @@ export default function Home() {
             <button className="cursor-pointer bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium">
               LUXO
             </button>
-          </div>
+          </div> */}
 
           {/* Vehicle Showcase */}
           <div className="relative">
             <div className="flex justify-between items-start mb-12">
-              <div>
-                <h3 className="text-xl font-medium text-gray-400">MERCEDEZ</h3>
-                <h2 className="text-7xl font-bold">S580</h2>
-              </div>
-              <div className="space-y-6">
+              {/* <div className="space-y-6">
                 <div className="text-center">
                   <h4 className="text-gray-400 text-sm">SPECS</h4>
                 </div>
@@ -304,24 +312,32 @@ export default function Home() {
                   <div className="text-2xl font-bold">328</div>
                   <div className="text-sm text-gray-400">HORSE POWER</div>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="relative mb-8">
+              <div className="text-center -mb-20">
+                <h3 className="text-3xl font-medium text-gray-400">{fleets[currentFleet]?.brand || "Mercedez"}</h3>
+                <h2 className="text-9xl font-bold">{fleets[currentFleet]?.model || "S580"}</h2>
+              </div>
               <Image
                 unoptimized
-                src="/mercedez.png?height=400&width=800"
+                src={fleets[currentFleet]?.image || "/mercedez.png?height=400&width=800"}
                 alt="Mercedes S580"
                 width={800}
                 height={400}
                 className="mx-auto object-contain"
               />
-              <button className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full">
-                <ChevronLeft size={24} />
-              </button>
-              <button className="cursor-pointer absolute right-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full">
-                <ChevronRight size={24} />
-              </button>
+              {fleets.length > 1 &&
+                <>
+                  <button onClick={() => handleFleetChange("left")} className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full">
+                    <ChevronLeft size={24} />
+                  </button>
+                  <button onClick={() => handleFleetChange("right")} className="cursor-pointer absolute right-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full">
+                    <ChevronRight size={24} />
+                  </button>
+                </>
+              }
             </div>
 
             <div className="grid grid-cols-4 gap-4 mb-8">

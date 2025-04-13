@@ -5,9 +5,9 @@ import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "fi
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { auth, db, storage } from "@/firebase";
-import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { Label } from "@/components/label";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { CircleLoader } from "react-spinners";
 import { div } from "framer-motion/client";
 import Loader from "@/components/loader";
@@ -47,6 +47,8 @@ export default function AdminDashboard() {
     const [newFleet, setNewFleet] = useState({});
     const [blogPosts, setBlogPosts] = useState([]);
     const [newPost, setNewPost] = useState({ title: "", content: "" });
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -100,18 +102,27 @@ export default function AdminDashboard() {
     };
 
     const handleAddFleet = async (category) => {
-        const fleetData = newFleet[category.label];
-        if (!fleetData?.image) return;
-        const storageReference = storageRef(storage, `fleet/${category.label}/${fleetData.image.name}`);
-        await uploadBytes(storageReference, fleetData.image);
-        const url = await getDownloadURL(storageReference);
-        await push(ref(db, `fleet/${category.label}`), {
-            name: fleetData.name,
-            description: fleetData.description,
-            image: url,
-        });
-        setNewFleet((prev) => ({ ...prev, [category.label]: { name: "", description: "", image: null } }));
-    };
+        setLoading(true)
+        try {
+            const fleetData = newFleet[category.label];
+            if (!fleetData?.image) return;
+            const storageReference = storageRef(storage, `fleet/${category.label}/${fleetData.image.name}`);
+            await uploadBytes(storageReference, fleetData.image);
+            const url = await getDownloadURL(storageReference);
+            await push(ref(db, `fleet/${category.label}`), {
+                brand: fleetData?.brand,
+                model: fleetData?.model,
+                description: fleetData?.description || "",
+                image: url,
+            });
+            toast.success("Veículo adicionado com sucesso!");
+            setNewFleet((prev) => ({ ...prev, [category.label]: { brand: "", model: "", description: "", image: null } }));
+        } catch (err) {
+            toast.error("Erro ao adicionar veículo")
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const handleAddPost = async () => {
         await push(ref(db, "blogPosts"), { title: newPost.title, content: newPost.content });
@@ -120,10 +131,10 @@ export default function AdminDashboard() {
 
     const handleLogin = async () => {
         try {
-            const provider = new GoogleAuthProvider()
-            await signInWithPopup(auth, provider);
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            setUser(userCredential.user);
         } catch (err) {
-            alert("Erro ao fazer login");
+            alert("Erro ao fazer login. Verifique seu email e senha.");
         }
     };
 
@@ -142,6 +153,7 @@ export default function AdminDashboard() {
     };
 
     const [hoveredBanner, setHoveredBanner] = useState<string | null>(null);
+    const [hoveredFleet, setHoveredFleet] = useState<string | null>(null);
 
     const handleDeleteBanner = async (categoryLabel: string, bannerId: string, imageUrl: string) => {
         setLoading(true)
@@ -150,7 +162,7 @@ export default function AdminDashboard() {
             const urlPath = new URL(imageUrl).pathname;
             const storagePath = decodeURIComponent(urlPath.split("/o/")[1]); // preserva as barras
             const storageReference = storageRef(storage, storagePath);
-            
+
             await deleteObject(storageReference);
 
             // Remover do database
@@ -165,11 +177,52 @@ export default function AdminDashboard() {
         }
     };
 
+    const handleDeleteFleet = async (categoryLabel: string, fleetId: string, imageUrl: string) => {
+        setLoading(true)
+        try {
+            // Remover do storage
+            const urlPath = new URL(imageUrl).pathname;
+            const storagePath = decodeURIComponent(urlPath.split("/o/")[1]); // preserva as barras
+            const storageReference = storageRef(storage, storagePath);
+
+            await deleteObject(storageReference);
+
+            // Remover do database
+            const fleetRef = ref(db, `/fleets/${categoryLabel}/${fleetId}`);
+            await remove(fleetRef);
+
+            console.log("Veículo removido com sucesso");
+        } catch (err) {
+            console.error("Erro ao remover fleet:", err);
+        } finally {
+            setLoading(false)
+        }
+    };
+
     if (!user) {
         return (
-            <div className="max-w-sm mx-auto mt-20 space-y-4 flex justify-center items-center flex-col">
+            <div className="max-w-sm mx-auto mt-20 space-y-6 flex justify-center items-center flex-col">
                 <h1 className="text-xl font-bold text-center">Login do Admin</h1>
-                <Button onClick={handleLogin}>Entrar com google</Button>
+
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-4 py-2 border rounded"
+                />
+
+                <input
+                    type="password"
+                    placeholder="Senha"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full px-4 py-2 border rounded"
+                />
+
+                <Button onClick={handleLogin} className="w-full">
+                    Entrar
+                </Button>
             </div>
         );
     }
@@ -203,7 +256,7 @@ export default function AdminDashboard() {
                             {newBanners[category.label] && (
                                 <img src={getPreviewUrl(newBanners[category.label])} alt="preview banner" className="w-40 my-2" />
                             )}
-                            <Button color={category.color} className="mt-4" onClick={() => handleUploadBanner(category)}>Salvar Banner</Button>
+                            <Button disabled={!Boolean(newBanners[category.label])} color={category.color} className="mt-4" onClick={() => handleUploadBanner(category)}>Salvar Banner</Button>
                             <ul className="mt-2 flex gap-2 flex-wrap">
                                 {(banners[category.label] || []).map((b) => (
                                     <li
@@ -230,12 +283,22 @@ export default function AdminDashboard() {
                         <section className="space-y-2">
                             <h3 className="text-xl font-semibold mb-2">Frota</h3>
                             <Input
-                                placeholder="Nome"
-                                value={newFleet[category.label]?.name || ""}
+                                placeholder="Marca"
+                                value={newFleet[category.label]?.brand || ""}
                                 onChange={(e) =>
                                     setNewFleet((prev) => ({
                                         ...prev,
-                                        [category.label]: { ...prev[category.label], name: e.target.value },
+                                        [category.label]: { ...prev[category.label], brand: e.target.value },
+                                    }))
+                                }
+                            />
+                            <Input
+                                placeholder="Modelo"
+                                value={newFleet[category.label]?.model || ""}
+                                onChange={(e) =>
+                                    setNewFleet((prev) => ({
+                                        ...prev,
+                                        [category.label]: { ...prev[category.label], model: e.target.value },
                                     }))
                                 }
                             />
@@ -265,15 +328,28 @@ export default function AdminDashboard() {
                             {newFleet[category.label]?.image && (
                                 <img src={getPreviewUrl(newFleet[category.label].image)} alt="preview veículo" className="w-40 my-2" />
                             )}
-                            <Button className="mt-4" color={category.color} onClick={() => handleAddFleet(category)}>Adicionar Veículo</Button>
+                            <Button disabled={!(Boolean(newFleet[category.label]?.image) && newFleet[category.label]?.brand && newFleet[category.label]?.model)} className="mt-4" color={category.color} onClick={() => handleAddFleet(category)}>Adicionar Veículo</Button>
                             <ul className="mt-2 space-y-2">
                                 {(fleet[category.label] || []).map((f) => (
-                                    <li key={f.id} className="flex gap-2 items-center">
+                                    <li
+                                        key={f.id}
+                                        onMouseEnter={() => setHoveredFleet(f.id)}
+                                        onMouseLeave={() => setHoveredFleet(null)}
+                                        className="flex gap-2 items-center relative w-fit">
                                         <img src={f.image} alt="frota" className="w-20" />
                                         <div>
-                                            <p className="font-semibold">{f.name}</p>
+                                            <p className="font-semibold">{f.brand}</p>
+                                            <p className="font-semibold">{f.model}</p>
                                             <p>{f.description}</p>
                                         </div>
+                                        {hoveredFleet === f.id && (
+                                            <button
+                                                onClick={() => handleDeleteFleet(category.label, f.id, f.url)}
+                                                className=" cursor-pointer hover:scale-105 transition-all absolute top-1 right-1 bg-red-600 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center shadow hover:bg-red-700"
+                                            >
+                                                ×
+                                            </button>
+                                        )}
                                     </li>
                                 ))}
                             </ul>
@@ -307,6 +383,7 @@ export default function AdminDashboard() {
 
                 </ul>
             </section>
+            <ToastContainer />
         </main>
     );
 }

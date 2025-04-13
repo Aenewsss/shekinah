@@ -24,7 +24,92 @@ import {
     PhoneIcon as WhatsApp,
 } from "lucide-react"
 import { useBanners } from "@/hooks/userBanners.hook"
+import { useFleets } from "@/hooks/userFleets.hook"
 
+const vehicles = [
+    {
+        brand: "RANGE",
+        model: "ROVER",
+        specs: {
+            km: "500",
+            seats: "5",
+            horsePower: "328",
+        },
+        images: [
+            "/interior-range/1.png?height=400&width=800",
+            "/interior-range/2.png?height=400&width=800",
+            "/interior-range/3.png?height=400&width=800",
+            "/interior-range/4.png?height=400&width=800",
+        ],
+    },
+]
+
+const testimonials = [
+    {
+        name: "Pedro Silva",
+        rating: 5,
+        text: "Serviço excepcional! O carro blindado me deu total segurança durante minha viagem de negócios.",
+        image: "/feedbacks/1.png?height=100&width=100",
+    },
+    {
+        name: "Ana Costa",
+        rating: 5,
+        text: "A blindagem do veículo me deu tranquilidade para viajar com minha família.",
+        image: "/feedbacks/3.png?height=100&width=100",
+    },
+
+    {
+        name: "Mário Oliveira",
+        rating: 5,
+        text: "Motorista profissional e veículo em perfeito estado. Recomendo!",
+        image: "/feedbacks/9.png?height=100&width=100",
+    },
+    {
+        name: "Carlos Mendes",
+        rating: 4,
+        text: "Excelente atendimento e pontualidade. O carro era muito confortável.",
+        image: "/feedbacks/4.png?height=100&width=100",
+    },
+    {
+        name: "Roberto Alves",
+        rating: 5,
+        text: "Serviço de primeira linha. Motorista educado e veículo impecável.",
+        image: "/feedbacks/5.png?height=100&width=100",
+    },
+    {
+        name: "Ana Ferreira",
+        rating: 5,
+        text: "Utilizei o serviço para uma viagem corporativa e fiquei impressionado com a qualidade e profissionalismo.",
+        image: "/feedbacks/3.png?height=100&width=100",
+    },
+    {
+        name: "Juliana Santos",
+        rating: 5,
+        text: "Me senti muito segura com o carro blindado durante todo o trajeto.",
+        image: "/feedbacks/6.png?height=100&width=100",
+    },
+
+    {
+        name: "Marcos Pereira",
+        rating: 5,
+        text: "Atendimento personalizado e veículo de luxo com toda segurança necessária.",
+        image: "/feedbacks/2.png?height=100&width=100",
+    },
+    {
+        name: "Fernanda Lima",
+        rating: 5,
+        text: "Experiência incrível! O conforto do veículo blindado superou minhas expectativas.",
+        image: "/feedbacks/8.png?height=100&width=100",
+    },
+]
+
+const certifications = [
+    "/certificados/1.png?height=60&width=120",
+    "/certificados/2.png?height=60&width=120",
+    "/certificados/3.png?height=60&width=120",
+    "/certificados/4.png?height=60&width=120",
+    "/certificados/5.png?height=60&width=120",
+]
 
 export default function BlindadosPage() {
     const [showVerification, setShowVerification] = useState(false)
@@ -32,6 +117,9 @@ export default function BlindadosPage() {
     const [activeThumbnail, setActiveThumbnail] = useState(0)
 
     const banners = useBanners("blindados"); // 🔸 categoria de banner
+    const fleets = useFleets("blindados"); // 🔸 categoria de banner
+
+    const [currentFleet, setCurrentFleet] = useState(0);
     const [currentBanner, setCurrentBanner] = useState(0);
 
     useEffect(() => {
@@ -42,129 +130,14 @@ export default function BlindadosPage() {
         return () => clearInterval(interval);
     }, [banners]);
 
-    const vehicles = [
-        {
-            brand: "RANGE",
-            model: "ROVER",
-            specs: {
-                km: "500",
-                seats: "5",
-                horsePower: "328",
-            },
-            images: [
-                "/interior-range/1.png?height=400&width=800",
-                "/interior-range/2.png?height=400&width=800",
-                "/interior-range/3.png?height=400&width=800",
-                "/interior-range/4.png?height=400&width=800",
-            ],
-        },
-    ]
 
-    const testimonials = [
-        {
-            name: "Pedro Silva",
-            rating: 5,
-            text: "Serviço excepcional! O carro blindado me deu total segurança durante minha viagem de negócios.",
-            image: "/feedbacks/1.png?height=100&width=100",
-        },
-        {
-            name: "Ana Costa",
-            rating: 5,
-            text: "A blindagem do veículo me deu tranquilidade para viajar com minha família.",
-            image: "/feedbacks/3.png?height=100&width=100",
-        },
-
-        {
-            name: "Mário Oliveira",
-            rating: 5,
-            text: "Motorista profissional e veículo em perfeito estado. Recomendo!",
-            image: "/feedbacks/9.png?height=100&width=100",
-        },
-        {
-            name: "Carlos Mendes",
-            rating: 4,
-            text: "Excelente atendimento e pontualidade. O carro era muito confortável.",
-            image: "/feedbacks/4.png?height=100&width=100",
-        },
-        {
-            name: "Roberto Alves",
-            rating: 5,
-            text: "Serviço de primeira linha. Motorista educado e veículo impecável.",
-            image: "/feedbacks/5.png?height=100&width=100",
-        },
-        {
-            name: "Ana Ferreira",
-            rating: 5,
-            text: "Utilizei o serviço para uma viagem corporativa e fiquei impressionado com a qualidade e profissionalismo.",
-            image: "/feedbacks/3.png?height=100&width=100",
-        },
-        {
-            name: "Juliana Santos",
-            rating: 5,
-            text: "Me senti muito segura com o carro blindado durante todo o trajeto.",
-            image: "/feedbacks/6.png?height=100&width=100",
-        },
-
-        {
-            name: "Marcos Pereira",
-            rating: 5,
-            text: "Atendimento personalizado e veículo de luxo com toda segurança necessária.",
-            image: "/feedbacks/2.png?height=100&width=100",
-        },
-        {
-            name: "Fernanda Lima",
-            rating: 5,
-            text: "Experiência incrível! O conforto do veículo blindado superou minhas expectativas.",
-            image: "/feedbacks/8.png?height=100&width=100",
-        },
-    ]
-
-    const certifications = [
-        "/certificados/1.png?height=60&width=120",
-        "/certificados/2.png?height=60&width=120",
-        "/certificados/3.png?height=60&width=120",
-        "/certificados/4.png?height=60&width=120",
-        "/certificados/5.png?height=60&width=120",
-    ]
-
-    const blogPosts = [
-        {
-            title: "Vantagens da blindagem veicular",
-            excerpt: "Descubra como a blindagem pode aumentar sua segurança no dia a dia e proteger você e sua família.",
-            image: "/placeholder.svg?height=200&width=300",
-            date: "10/04/2023",
-        },
-        {
-            title: "Níveis de blindagem: qual escolher?",
-            excerpt: "Entenda as diferenças entre os níveis de blindagem e qual é o mais adequado para suas necessidades.",
-            image: "/placeholder.svg?height=200&width=300",
-            date: "15/05/2023",
-        },
-        {
-            title: "Manutenção de carros blindados",
-            excerpt: "Saiba como manter seu veículo blindado em perfeitas condições para garantir sua durabilidade.",
-            image: "/placeholder.svg?height=200&width=300",
-            date: "22/06/2023",
-        },
-    ]
-
-    const vehicleCategories = [
-        {
-            title: "Carros Populares",
-            description: "Clique e saiba mais sobre a categoria de carros populares disponíveis em nosso modelo.",
-            image: "/placeholder.svg?height=300&width=400",
-        },
-        {
-            title: "Carros Executivos",
-            description: "Clique e saiba mais sobre a categoria de carros executivos disponíveis em nosso modelo.",
-            image: "/placeholder.svg?height=300&width=400",
-        },
-        {
-            title: "Vans",
-            description: "Clique e saiba mais sobre a categoria de vans disponíveis em nosso modelo.",
-            image: "/placeholder.svg?height=300&width=400",
-        },
-    ]
+    function handleFleetChange(direction: "left" | "right") {
+        if (direction === "left") {
+            setCurrentFleet((prev) => (prev - 1 + fleets.length) % fleets.length);
+        } else {
+            setCurrentFleet((prev) => (prev + 1) % fleets.length);
+        }
+    }
 
     const renderStars = (rating: number) => {
         return Array(5)
@@ -322,85 +295,70 @@ export default function BlindadosPage() {
             <section className="py-16">
                 <div className="container mx-auto px-4">
                     <h2 className="text-2xl font-bold mb-8 text-[#0168ec]">FROTAS DE VEÍCULOS</h2>
-                    <div className="flex space-x-4 mb-12">
-                        <Link href="/blindados" className="bg-[#0168ec] text-white px-6 py-2 rounded-md font-medium">
-                            BLINDADOS
-                        </Link>
-                        <Link
-                            href="/"
-                            className="bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium"
-                        >
-                            EXECUTIVO
-                        </Link>
-                        <Link
-                            href="/"
-                            className="bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium"
-                        >
-                            POPULAR
-                        </Link>
-                    </div>
+                    {/* <div className="flex space-x-4 mb-12">
+            <button className="cursor-pointer bg-[#0168ec] text-white px-6 py-2 rounded-md font-medium">SEDAN</button>
+            <button className="cursor-pointer bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium">
+              SUV
+            </button>
+            <button className="cursor-pointer bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium">
+              LUXO
+            </button>
+          </div> */}
 
                     {/* Vehicle Showcase */}
                     <div className="relative">
                         <div className="flex justify-between items-start mb-12">
-                            <div>
-                                <h3 className="text-xl font-medium text-gray-400">{vehicles[activeVehicleIndex].brand}</h3>
-                                <h2 className="text-7xl font-bold">{vehicles[activeVehicleIndex].model}</h2>
-                            </div>
-                            <div className="space-y-6">
-                                <div className="text-center">
-                                    <h4 className="text-gray-400 text-sm">SPECS</h4>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold">{vehicles[activeVehicleIndex].specs.km}</div>
-                                    <div className="text-sm text-gray-400">KM</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold">{vehicles[activeVehicleIndex].specs.seats}</div>
-                                    <div className="text-sm text-gray-400">SEATS</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold">{vehicles[activeVehicleIndex].specs.horsePower}</div>
-                                    <div className="text-sm text-gray-400">HORSE POWER</div>
-                                </div>
-                            </div>
+                            {/* <div className="space-y-6">
+                <div className="text-center">
+                  <h4 className="text-gray-400 text-sm">SPECS</h4>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">500</div>
+                  <div className="text-sm text-gray-400">KM</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">5</div>
+                  <div className="text-sm text-gray-400">SEATS</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">328</div>
+                  <div className="text-sm text-gray-400">HORSE POWER</div>
+                </div>
+              </div> */}
                         </div>
 
                         <div className="relative mb-8">
+                            <div className="text-center -mb-20">
+                                <h3 className="text-3xl font-medium text-gray-400">{fleets[currentFleet]?.brand || "Range"}</h3>
+                                <h2 className="text-9xl font-bold">{fleets[currentFleet]?.model || "Rover"}</h2>
+                            </div>
                             <Image
                                 unoptimized
-                                src={"/range-rover.png"}
-                                alt={`${vehicles[activeVehicleIndex].brand} ${vehicles[activeVehicleIndex].model}`}
-                                width={1000}
+                                src={fleets[currentFleet]?.image || "/range-rover.png?height=400&width=800"}
+                                alt="Mercedes S580"
+                                width={800}
                                 height={400}
                                 className="mx-auto object-contain"
                             />
-                            <button
-                                className="absolute left-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full"
-                                onClick={() => setActiveVehicleIndex((prev) => (prev === 0 ? vehicles.length - 1 : prev - 1))}
-                            >
-                                <ChevronLeft size={24} />
-                            </button>
-                            <button
-                                className="absolute right-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full"
-                                onClick={() => setActiveVehicleIndex((prev) => (prev === vehicles.length - 1 ? 0 : prev + 1))}
-                            >
-                                <ChevronRight size={24} />
-                            </button>
+                            {fleets.length > 1 &&
+                                <>
+                                    <button onClick={() => handleFleetChange("left")} className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full">
+                                        <ChevronLeft size={24} />
+                                    </button>
+                                    <button onClick={() => handleFleetChange("right")} className="cursor-pointer absolute right-0 top-1/2 -translate-y-1/2 bg-[#0168ec] p-2 rounded-full">
+                                        <ChevronRight size={24} />
+                                    </button>
+                                </>
+                            }
                         </div>
 
                         <div className="grid grid-cols-4 gap-4 mb-8">
-                            {vehicles[activeVehicleIndex].images.map((img, index) => (
-                                <div
-                                    key={index}
-                                    className={`border-8 ${activeThumbnail === index ? "border-[#0168ec]" : "border-white"
-                                        } rounded-lg overflow-hidden cursor-pointer`}
-                                    onClick={() => setActiveThumbnail(index)}
-                                >
+                            {[1, 2, 3, 4].map((img) => (
+                                <div key={img} className="border-8 border-white rounded-lg overflow-hidden">
                                     <Image
                                         unoptimized
-                                        src={img || "/placeholder.svg"}
-                                        alt={`Interior ${index + 1}`}
+                                        src={`/interior-mercedez/${img}.png?height=100&width=200`}
+                                        alt={`Interior ${img}`}
                                         width={200}
                                         height={100}
                                         className="w-full h-full object-cover"
@@ -410,10 +368,7 @@ export default function BlindadosPage() {
                         </div>
 
                         <div className="text-center">
-                            <button
-                                className="bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center"
-                                onClick={() => setShowVerification(true)}
-                            >
+                            <button className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center">
                                 QUERO SABER MAIS
                                 <ArrowRight className="ml-2" size={16} />
                             </button>

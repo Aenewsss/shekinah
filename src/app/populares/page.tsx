@@ -20,6 +20,65 @@ import {
 } from "lucide-react"
 import { useBanners } from "@/hooks/userBanners.hook"
 
+const testimonials = [
+    {
+        name: "Pedro Silva",
+        rating: 5,
+        text: "Serviço excepcional! O carro blindado me deu total segurança durante minha viagem de negócios.",
+        image: "/feedbacks/1.png?height=100&width=100",
+    },
+    {
+        name: "Ana Costa",
+        rating: 5,
+        text: "A blindagem do veículo me deu tranquilidade para viajar com minha família.",
+        image: "/feedbacks/3.png?height=100&width=100",
+    },
+
+    {
+        name: "Mário Oliveira",
+        rating: 5,
+        text: "Motorista profissional e veículo em perfeito estado. Recomendo!",
+        image: "/feedbacks/9.png?height=100&width=100",
+    },
+    {
+        name: "Carlos Mendes",
+        rating: 4,
+        text: "Excelente atendimento e pontualidade. O carro era muito confortável.",
+        image: "/feedbacks/4.png?height=100&width=100",
+    },
+    {
+        name: "Roberto Alves",
+        rating: 5,
+        text: "Serviço de primeira linha. Motorista educado e veículo impecável.",
+        image: "/feedbacks/5.png?height=100&width=100",
+    },
+    {
+        name: "Ana Ferreira",
+        rating: 5,
+        text: "Utilizei o serviço para uma viagem corporativa e fiquei impressionado com a qualidade e profissionalismo.",
+        image: "/feedbacks/3.png?height=100&width=100",
+    },
+    {
+        name: "Juliana Santos",
+        rating: 5,
+        text: "Me senti muito segura com o carro blindado durante todo o trajeto.",
+        image: "/feedbacks/6.png?height=100&width=100",
+    },
+
+    {
+        name: "Marcos Pereira",
+        rating: 5,
+        text: "Atendimento personalizado e veículo de luxo com toda segurança necessária.",
+        image: "/feedbacks/2.png?height=100&width=100",
+    },
+    {
+        name: "Fernanda Lima",
+        rating: 5,
+        text: "Experiência incrível! O conforto do veículo blindado superou minhas expectativas.",
+        image: "/feedbacks/8.png?height=100&width=100",
+    },
+]
+
 export default function PopularesPage() {
     const banners = useBanners("populares"); // 🔸 categoria de banner
 
@@ -33,6 +92,14 @@ export default function PopularesPage() {
         }, 5000); // troca a cada 5 segundos
         return () => clearInterval(interval);
     }, [banners]);
+
+    const renderStars = (rating: number) => {
+        return Array(5)
+            .fill(0)
+            .map((_, i) => (
+                <Star key={i} size={16} className={i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"} />
+            ))
+    }
 
     return (
         <main className="min-h-screen bg-white text-black">
@@ -198,7 +265,7 @@ export default function PopularesPage() {
                     <p className="text-gray-600 mb-8 text-center">Escolha o veículo que melhor atende às suas necessidades</p>
 
                     {/* Category Tabs */}
-                    <div className="flex justify-center mb-8 space-x-4">
+                    {/* <div className="flex justify-center mb-8 space-x-4">
                         {["Todos", "Sedans", "Hatch"].map((category) => (
                             <button
                                 key={category}
@@ -211,11 +278,10 @@ export default function PopularesPage() {
                                 {category}
                             </button>
                         ))}
-                    </div>
+                    </div> */}
 
                     {/* Cars Grid */}
                     <div className="flex justify-center">
-
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
                                 { name: "gol", price: "99.90" },
@@ -236,7 +302,7 @@ export default function PopularesPage() {
                                             </div>
                                         </div>
 
-                                        <div className="flex justify-between mb-4">
+                                        {/* <div className="flex justify-between mb-4">
                                             <div className="flex flex-col items-center">
                                                 <Image src="/placeholder.svg?height=24&width=24" alt="Portas" width={24} height={24} />
                                                 <span className="text-xs text-gray-500 mt-1">4 Portas</span>
@@ -253,7 +319,7 @@ export default function PopularesPage() {
                                                 <Image src="/placeholder.svg?height=24&width=24" alt="Malas" width={24} height={24} />
                                                 <span className="text-xs text-gray-500 mt-1">2 Malas</span>
                                             </div>
-                                        </div>
+                                        </div> */}
 
                                         <button className="cursor-pointer bg-[#0168ec] text-white w-full py-2 rounded-md font-medium hover:bg-blue-700 transition-colors">
                                             RESERVAR AGORA
@@ -272,47 +338,83 @@ export default function PopularesPage() {
             </section>
 
             {/* Testimonials Section */}
-            <section className="py-16">
+            <section className="py-16 bg-white text-white">
                 <div className="container mx-auto px-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
-                                <div key={index} className="bg-[#0168ec] text-white p-4 rounded-lg">
-                                    <div className="flex items-center mb-3">
-                                        <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
-                                            <Image
-                                                src={`/placeholder.svg?height=40&width=40`}
-                                                alt={`Cliente ${index}`}
-                                                width={40}
-                                                height={40}
-                                                className="object-cover"
-                                            />
-                                        </div>
-                                        <div>
-                                            <div className="font-medium">Cliente {index}</div>
-                                            <div className="flex">
-                                                {[...Array(5)].map((_, i) => (
-                                                    <Star key={i} size={12} className="fill-current text-yellow-400" />
-                                                ))}
-                                            </div>
-                                        </div>
+                    <div className="flex gap-4 md:flex-nowrap flex-wrap">
+                        <div className="flex flex-col gap-4">
+                            {testimonials.slice(0, 3).map((testimonial, index) => (
+                                <div
+                                    key={index}
+                                    className={` bg-[#0168ec] h-full p-4 rounded-lg`}
+                                >
+                                    <div className="flex items-center mb-2">
+                                        <div className="flex">{renderStars(testimonial.rating)}</div>
+                                        <span className="ml-2 text-sm">{testimonial.rating}.0</span>
                                     </div>
-                                    <p className="text-sm">
-                                        "Excelente serviço! Carros em ótimo estado e atendimento muito profissional. Recomendo!"
-                                    </p>
+                                    <p className="text-sm mb-4">{testimonial.text}</p>
+                                    <div className={`flex items-center ${(index === 0) && 'flex-col'}`}>
+                                        <Image
+                                            unoptimized
+                                            src={testimonial.image || "/placeholder.svg"}
+                                            alt={testimonial.name}
+                                            width={40}
+                                            height={40}
+                                            className={`rounded-full mr-3 ${(index === 0) && 'w-full h-full'}`}
+                                        />
+                                        <span className="font-medium">{testimonial.name}</span>
+                                    </div>
                                 </div>
                             ))}
                         </div>
-                        <div className="flex items-center justify-center">
-                            <div className="w-48 h-48 rounded-full overflow-hidden">
-                                <Image
-                                    src="/placeholder.svg?height=200&width=200"
-                                    alt="Cliente Destaque"
-                                    width={200}
-                                    height={200}
-                                    className="object-cover"
-                                />
-                            </div>
+                        <div className="flex flex-col gap-4">
+                            {testimonials.slice(3, 6).map((testimonial, index) => (
+                                <div
+                                    key={index}
+                                    className={` bg-[#0168ec] h-full p-4 rounded-lg`}
+                                >
+                                    <div className="flex items-center mb-2">
+                                        <div className="flex">{renderStars(testimonial.rating)}</div>
+                                        <span className="ml-2 text-sm">{testimonial.rating}.0</span>
+                                    </div>
+                                    <p className="text-sm mb-4">{testimonial.text}</p>
+                                    <div className={`flex items-center ${(index === 2) && 'flex-col'}`}>
+                                        <Image
+                                            unoptimized
+                                            src={testimonial.image || "/placeholder.svg"}
+                                            alt={testimonial.name}
+                                            width={40}
+                                            height={40}
+                                            className={`rounded-full mr-3 ${(index === 2) && 'w-full h-full'}`}
+                                        />
+                                        <span className="font-medium">{testimonial.name}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="flex flex-col gap-4">
+                            {testimonials.slice(6, 9).map((testimonial, index) => (
+                                <div
+                                    key={index}
+                                    className={` bg-[#0168ec] h-full p-4 rounded-lg`}
+                                >
+                                    <div className="flex items-center mb-2">
+                                        <div className="flex">{renderStars(testimonial.rating)}</div>
+                                        <span className="ml-2 text-sm">{testimonial.rating}.0</span>
+                                    </div>
+                                    <p className="text-sm mb-4">{testimonial.text}</p>
+                                    <div className={`flex items-center ${(index == 1) && 'flex-col'}`}>
+                                        <Image
+                                            unoptimized
+                                            src={testimonial.image || "/placeholder.svg"}
+                                            alt={testimonial.name}
+                                            width={40}
+                                            height={40}
+                                            className={`rounded-full mr-3 ${(index == 1) && 'w-full h-full'}`}
+                                        />
+                                        <span className="font-medium">{testimonial.name}</span>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
