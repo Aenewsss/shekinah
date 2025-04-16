@@ -159,28 +159,22 @@ export default function VansPage() {
             {/* Header */}
             <header className="absolute top-0 left-0 right-0 z-10">
                 <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-                    <div className="text-white font-bold text-2xl">
+                    <a href="/" className="text-white font-bold text-2xl">
                         <Image src="/logo.svg" alt="Shekinah" width={120} height={30} className="object-contain" />
-                    </div>
+                    </a>
                     <nav className="hidden md:flex space-x-8">
-                        <Link href="/" className="text-white hover:text-[#0168ec] transition-colors">
-                            SOBRE NÓS
-                        </Link>
-                        <Link href="/" className="text-white hover:text-[#0168ec] transition-colors">
+                        <Link href="#frota" className="text-white hover:text-[#0168ec] transition-colors">
                             FROTAS DE VEÍCULOS
                         </Link>
-                        <Link href="/" className="text-white hover:text-[#0168ec] transition-colors">
+                        <Link href="#blog" className="text-white hover:text-[#0168ec] transition-colors">
                             BLOG
                         </Link>
-                        <Link href="/" className="text-white hover:text-[#0168ec] transition-colors">
+                        {/* <Link href="#faq" className="text-white hover:text-[#0168ec] transition-colors">
                             FAQ
-                        </Link>
+                        </Link> */}
                         <Link
-                            href="#"
+                            href="#contato"
                             className="text-white hover:text-[#0168ec] transition-colors"
-                            onClick={(e) => {
-                                e.preventDefault()
-                            }}
                         >
                             CONTATO
                         </Link>
@@ -228,22 +222,22 @@ export default function VansPage() {
                             <br />E MOTORISTAS PARA SEUS TRAJETOS E EVENTOS.
                         </p>
                         <div className="flex flex-wrap gap-4">
-                            <button
+                            <a href={process.env.NEXT_PUBLIC_WPP}
                                 className="bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
                             >
                                 FAÇA UM ORÇAMENTO
-                            </button>
-                            <button className="border border-white text-white px-8 py-3 rounded-md font-medium hover:bg-white/10 transition-colors">
+                            </a>
+                            <a href={process.env.NEXT_PUBLIC_WPP} className="border border-white text-white px-8 py-3 rounded-md font-medium hover:bg-white/10 transition-colors">
                                 CONHEÇA NOSSA FROTA
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
 
                 {/* Feature thumbnails */}
-                <div className="absolute bottom-8 left-0 right-0 z-10">
+                <div className="absolute md:bottom-8 -bottom-10 left-0 right-0 z-10">
                     <div className="container mx-auto px-4">
-                        <div className="grid grid-cols-4 gap-4 max-w-3xl">
+                        <div className="sm:grid grid-cols-4 gap-4 max-w-3xl">
                             <div className="bg-black/60 backdrop-blur-sm p-3 rounded-md">
                                 <div className="flex items-center mb-2">
                                     <Users className="text-[#0168ec] mr-2" size={20} />
@@ -306,7 +300,7 @@ export default function VansPage() {
             </div>
 
             {/* Fleet Section */}
-            <section className="py-16">
+            <section id="frota" className="py-16">
                 <div className="container mx-auto px-4">
                     <h2 className="text-2xl font-bold mb-8 text-[#0168ec]">FROTAS DE VEÍCULOS</h2>
                     {/* <div className="flex space-x-4 mb-12">
@@ -342,9 +336,9 @@ export default function VansPage() {
                         </div>
 
                         <div className="relative mb-8">
-                            <div className="text-center -mb-20">
-                                <h3 className="text-3xl font-medium text-gray-400">{fleets[currentFleet]?.brand || "Mercedez"}</h3>
-                                <h2 className="text-9xl font-bold">{fleets[currentFleet]?.model || "Splinter"}</h2>
+                            <div className="text-center md:-mb-20 -mb-10">
+                                <h3 className="md:text-3xl text-2xl font-medium text-gray-400">{fleets[currentFleet]?.brand || "Mercedez"}</h3>
+                                <h2 className="md:text-9xl text-7xl font-bold">{fleets[currentFleet]?.model || "Splinter"}</h2>
                             </div>
                             <Image
                                 unoptimized
@@ -382,10 +376,10 @@ export default function VansPage() {
                         </div>
 
                         <div className="text-center">
-                            <button className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center">
+                            <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center">
                                 QUERO SABER MAIS
                                 <ArrowRight className="ml-2" size={16} />
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -479,11 +473,11 @@ export default function VansPage() {
                 </div>
             </section>
 
-            {/* Testimonials Section */}
-            <section className="py-16 bg-black">
+               {/* Testimonials Section */}
+               <section className="py-16 bg-black">
                 <div className="container mx-auto px-4">
                     <div className="flex gap-4 md:flex-nowrap flex-wrap">
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-4 md:w-auto w-full">
                             {testimonials.slice(0, 3).map((testimonial, index) => (
                                 <div
                                     key={index}
@@ -494,21 +488,21 @@ export default function VansPage() {
                                         <span className="ml-2 text-sm">{testimonial.rating}.0</span>
                                     </div>
                                     <p className="text-sm mb-4">{testimonial.text}</p>
-                                    <div className={`flex items-center ${(index === 0) && 'flex-col'}`}>
+                                    <div className={`flex items-center ${(index === 0) && 'md:flex-col'}`}>
                                         <Image
                                             unoptimized
                                             src={testimonial.image || "/placeholder.svg"}
                                             alt={testimonial.name}
                                             width={40}
                                             height={40}
-                                            className={`rounded-full mr-3 ${(index === 0) && 'w-full h-full'}`}
+                                            className={`rounded-full mr-3 ${(index === 0) && 'md:w-full md:h-full'}`}
                                         />
                                         <span className="font-medium">{testimonial.name}</span>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-4 md:w-auto w-full">
                             {testimonials.slice(3, 6).map((testimonial, index) => (
                                 <div
                                     key={index}
@@ -519,21 +513,21 @@ export default function VansPage() {
                                         <span className="ml-2 text-sm">{testimonial.rating}.0</span>
                                     </div>
                                     <p className="text-sm mb-4">{testimonial.text}</p>
-                                    <div className={`flex items-center ${(index === 2) && 'flex-col'}`}>
+                                    <div className={`flex items-center ${(index === 2) && 'md:flex-col'}`}>
                                         <Image
                                             unoptimized
                                             src={testimonial.image || "/placeholder.svg"}
                                             alt={testimonial.name}
                                             width={40}
                                             height={40}
-                                            className={`rounded-full mr-3 ${(index === 2) && 'w-full h-full'}`}
+                                            className={`rounded-full mr-3 ${(index === 2) && 'md:w-full md:h-full'}`}
                                         />
                                         <span className="font-medium">{testimonial.name}</span>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-4 md:w-auto w-full">
                             {testimonials.slice(6, 9).map((testimonial, index) => (
                                 <div
                                     key={index}
@@ -544,14 +538,14 @@ export default function VansPage() {
                                         <span className="ml-2 text-sm">{testimonial.rating}.0</span>
                                     </div>
                                     <p className="text-sm mb-4">{testimonial.text}</p>
-                                    <div className={`flex items-center ${(index == 1) && 'flex-col'}`}>
+                                    <div className={`flex items-center ${(index == 1) && 'md:flex-col'}`}>
                                         <Image
                                             unoptimized
                                             src={testimonial.image || "/placeholder.svg"}
                                             alt={testimonial.name}
                                             width={40}
                                             height={40}
-                                            className={`rounded-full mr-3 ${(index == 1) && 'w-full h-full'}`}
+                                            className={`rounded-full mr-3 ${(index == 1) && 'md:w-full md:h-full'}`}
                                         />
                                         <span className="font-medium">{testimonial.name}</span>
                                     </div>
@@ -582,7 +576,7 @@ export default function VansPage() {
             </section>
 
             {/* Blog Section */}
-            <section className="py-16 bg-black">
+            <section id="blog" className="py-16 bg-black">
                 <div className="container mx-auto px-4">
                     <h2 className="text-2xl font-bold mb-12 text-[#0168ec]">NOSSO BLOG</h2>
 
@@ -597,7 +591,7 @@ export default function VansPage() {
                                             alt={`Blog post ${post}`}
                                             width={500}
                                             height={550}
-                                            className="object-cover"
+                                                                                className="object-cover sm:w-auto w-full"
                                         />
                                     </div>
                                     <div className="p-4">
@@ -636,7 +630,7 @@ export default function VansPage() {
                     <h2 className="text-2xl font-bold mb-12 text-center text-[#0168ec]">OUTRAS CATEGORIAS DE VEÍCULOS</h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
-                        <a href="/populares" className="transition-all hover:scale-105 bg-[#151515] rounded-lg overflow-hidden w-[380px]">
+                        <a href="/populares" className="transition-all hover:scale-105 bg-[#151515] rounded-lg overflow-hidden sm:w-[380px]">
                             <div className="relative">
                                 <Image
                                     unoptimized
@@ -644,7 +638,7 @@ export default function VansPage() {
                                     alt="Carros Populares"
                                     width={380}
                                     height={300}
-                                    className="object-cover"
+                                                                        className="object-cover sm:w-auto w-full"
                                 />
                             </div>
                             <div className="p-4">
@@ -655,7 +649,7 @@ export default function VansPage() {
                             </div>
                         </a>
 
-                        <a href="/blindados" className="transition-all hover:scale-105 bg-[#151515] rounded-lg overflow-hidden w-[380px]">
+                        <a href="/blindados" className="transition-all hover:scale-105 bg-[#151515] rounded-lg overflow-hidden sm:w-[380px]">
                             <div className="relative">
                                 <Image
                                     unoptimized
@@ -663,7 +657,7 @@ export default function VansPage() {
                                     alt="Carros Blindados"
                                     width={380}
                                     height={300}
-                                    className="object-cover"
+                                                                        className="object-cover sm:w-auto w-full"
                                 />
                             </div>
                             <div className="p-4">
@@ -674,7 +668,7 @@ export default function VansPage() {
                             </div>
                         </a>
 
-                        <a href="/vans" className="transition-all hover:scale-105 bg-[#151515] rounded-lg overflow-hidden w-[380px]">
+                        <a href="/vans" className="transition-all hover:scale-105 bg-[#151515] rounded-lg overflow-hidden sm:w-[380px]">
                             <div className="relative">
                                 <Image
                                     unoptimized
@@ -682,7 +676,7 @@ export default function VansPage() {
                                     alt="Vans"
                                     width={380}
                                     height={300}
-                                    className="object-cover"
+                                                                        className="object-cover sm:w-auto w-full"
                                 />
                             </div>
                             <div className="p-4">
@@ -697,7 +691,7 @@ export default function VansPage() {
             </section>
 
             {/* Contact Section */}
-            <section className="py-16 bg-black">
+            <section id="contato" className="py-16 bg-black">
                 <div className="container mx-auto px-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                         <div>

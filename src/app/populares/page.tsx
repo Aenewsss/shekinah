@@ -108,9 +108,11 @@ export default function PopularesPage() {
             {/* Hero Section */}
             <section className="bg-white py-8 md:py-16">
                 <div className="flex flex-col md:flex-row items-center relative">
-                    <div className="container mx-auto px-4 w-full h-[600px]">
+                    <div className="container mx-auto px-4 w-full lg:h-[600px]">
                         <div className="mb-8 md:mb-0">
-                            <Image src="/logo-azul.svg" alt="Shekinah" width={180} height={45} className="mb-6" />
+                            <a href="/" className="text-white font-bold text-2xl">
+                                <Image src="/logo-azul.svg" alt="Shekinah" width={180} height={45} className="mb-6" />
+                            </a>
                             <h1 className="text-3xl md:text-4xl font-bold mb-4">
                                 Aluguel de carros, <br />
                                 sem <span className="text-[#0168ec]">Complicação</span>
@@ -119,17 +121,17 @@ export default function PopularesPage() {
                                 Alugue carros populares com serviço de qualidade <br />e preços acessíveis para seus trajetos.
                             </p>
                             <div className="flex space-x-4">
-                                <button className="cursor-pointer bg-[#0168ec] text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                                <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
                                     FAÇA UM ORÇAMENTO
-                                </button>
-                                <button className="cursor-pointer border border-gray-300 text-gray-700 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors">
+                                </a>
+                                <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer border border-gray-300 text-gray-700 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors">
                                     SAIBA MAIS
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
 
-                    <div className="absolute right-0 top-0">
+                    <div className="absolute right-0 top-0 lg:block hidden">
                         {banners[currentBanner] && (
                             <Image
                                 unoptimized
@@ -153,10 +155,33 @@ export default function PopularesPage() {
                         }
                     </div>
                 </div>
+                <div className="w-full lg:hidden block">
+                    {banners[currentBanner] && (
+                        <Image
+                            unoptimized
+                            src={banners[currentBanner]}
+                            alt={`Banner ${currentBanner + 1}`}
+                            fill
+                            className="object-cover brightness-50 transition-opacity duration-700 ease-in-out"
+                            priority
+                        />
+                    )}
+                    {
+                        !banners.length && (
+                            <Image
+                                src="/banners/populares.png?height=600&width=800"
+                                alt="Carro Popular"
+                                width={800}
+                                height={600}
+                                className="object-contain"
+                            />
+                        )
+                    }
+                </div>
                 <div className="container mx-auto px-4">
 
                     {/* Car Categories */}
-                    <div className="flex justify-center mt-8 space-x-4 overflow-x-auto pb-4">
+                    <div className="flex justify-center mt-8 space-x-4 overflow-x-auto pb-4 lg:flex-nowrap flex-wrap">
                         {["a", "b", "c", "d", "e"].map((group, index) => (
                             <Image
                                 key={index}
@@ -293,15 +318,15 @@ export default function PopularesPage() {
                                 { name: "clio", price: "79.90" },
                                 { name: "uno", price: "79.90" },
                             ].map((car, index) => (
-                                <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md w-[390px]">
-                                    <Image src={`/frota-populares/${car.name}.png?height=260&width=390`} alt={car.name} width={390} height={260} className="object-cover" />
+                                <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md lg:w-[390px] md:w-[290px] min-w-[290px]">
+                                    <Image src={`/frota-populares/${car.name}.png?height=260&width=390`} alt={car.name} width={390} height={260} className="object-cover w-full" />
                                     <div className="p-4">
                                         <div className="flex justify-between items-center mb-4">
                                             <h3 className="text-xl font-bold uppercase">{car.name}</h3>
-                                            <div className="text-[#0168ec] font-bold">
+                                            {/* <div className="text-[#0168ec] font-bold">
                                                 R$ {car.price}
                                                 <span className="text-xs text-gray-500">/dia</span>
-                                            </div>
+                                            </div> */}
                                         </div>
 
                                         {/* <div className="flex justify-between mb-4">
@@ -324,7 +349,9 @@ export default function PopularesPage() {
                                         </div> */}
 
                                         <button className="cursor-pointer bg-[#0168ec] text-white w-full py-2 rounded-md font-medium hover:bg-blue-700 transition-colors">
-                                            RESERVAR AGORA
+                                            <a href={process.env.NEXT_PUBLIC_WPP} >
+                                                RESERVAR AGORA
+                                            </a>
                                         </button>
                                     </div>
                                 </div>
@@ -332,9 +359,9 @@ export default function PopularesPage() {
                         </div>
                     </div>
                     <div className="text-center mt-8">
-                        <button className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                        <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
                             VER TODOS OS VEÍCULOS
-                        </button>
+                        </a>
                     </div>
                 </div>
             </section>
@@ -343,7 +370,7 @@ export default function PopularesPage() {
             <section className="py-16 bg-white text-white">
                 <div className="container mx-auto px-4">
                     <div className="flex gap-4 md:flex-nowrap flex-wrap">
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-4 md:w-auto w-full">
                             {testimonials.slice(0, 3).map((testimonial, index) => (
                                 <div
                                     key={index}
@@ -354,21 +381,22 @@ export default function PopularesPage() {
                                         <span className="ml-2 text-sm">{testimonial.rating}.0</span>
                                     </div>
                                     <p className="text-sm mb-4">{testimonial.text}</p>
-                                    <div className={`flex items-center ${(index === 0) && 'flex-col'}`}>
+                                    <div className={`flex items-center ${(index === 0) && 'md:flex-col'}`}>
                                         <Image
                                             unoptimized
                                             src={testimonial.image || "/placeholder.svg"}
                                             alt={testimonial.name}
                                             width={40}
                                             height={40}
-                                            className={`rounded-full mr-3 ${(index === 0) && 'w-full h-full'}`}
+                                            className={`rounded-full mr-3 ${(index === 0) && 'md:w-full md:h-full'}`}
                                         />
                                         <span className="font-medium">{testimonial.name}</span>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-4 md:w-auto w-full">
+
                             {testimonials.slice(3, 6).map((testimonial, index) => (
                                 <div
                                     key={index}
@@ -379,21 +407,22 @@ export default function PopularesPage() {
                                         <span className="ml-2 text-sm">{testimonial.rating}.0</span>
                                     </div>
                                     <p className="text-sm mb-4">{testimonial.text}</p>
-                                    <div className={`flex items-center ${(index === 2) && 'flex-col'}`}>
+                                    <div className={`flex items-center ${(index === 2) && 'md:flex-col'}`}>
                                         <Image
                                             unoptimized
                                             src={testimonial.image || "/placeholder.svg"}
                                             alt={testimonial.name}
                                             width={40}
                                             height={40}
-                                            className={`rounded-full mr-3 ${(index === 2) && 'w-full h-full'}`}
+                                            className={`rounded-full mr-3 ${(index === 2) && 'md:w-full md:h-full'}`}
                                         />
                                         <span className="font-medium">{testimonial.name}</span>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-4 md:w-auto w-full">
+
                             {testimonials.slice(6, 9).map((testimonial, index) => (
                                 <div
                                     key={index}
@@ -404,14 +433,14 @@ export default function PopularesPage() {
                                         <span className="ml-2 text-sm">{testimonial.rating}.0</span>
                                     </div>
                                     <p className="text-sm mb-4">{testimonial.text}</p>
-                                    <div className={`flex items-center ${(index == 1) && 'flex-col'}`}>
+                                    <div className={`flex items-center ${(index == 1) && 'md:flex-col'}`}>
                                         <Image
                                             unoptimized
                                             src={testimonial.image || "/placeholder.svg"}
                                             alt={testimonial.name}
                                             width={40}
                                             height={40}
-                                            className={`rounded-full mr-3 ${(index == 1) && 'w-full h-full'}`}
+                                            className={`rounded-full mr-3 ${(index == 1) && 'md:w-full md:h-full'}`}
                                         />
                                         <span className="font-medium">{testimonial.name}</span>
                                     </div>
@@ -577,7 +606,7 @@ export default function PopularesPage() {
                                             alt={`Blog post ${post}`}
                                             width={500}
                                             height={550}
-                                            className="object-cover"
+                                            className="object-cover sm:w-auto w-full"
                                         />
                                     </div>
                                     <div className="p-4">
@@ -616,7 +645,7 @@ export default function PopularesPage() {
                     <h2 className="text-2xl font-bold mb-12 text-center text-[#0168ec]">OUTRAS CATEGORIAS DE VEÍCULOS</h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
-                        <a href="/populares" className="transition-all hover:scale-105 bg-[#0168EC] text-white rounded-lg overflow-hidden w-[380px]">
+                        <a href="/populares" className="transition-all hover:scale-105 bg-[#0168EC] text-white rounded-lg overflow-hidden sm:w-[380px]">
                             <div className="relative">
                                 <Image
                                     unoptimized
@@ -624,7 +653,7 @@ export default function PopularesPage() {
                                     alt="Carros Populares"
                                     width={380}
                                     height={300}
-                                    className="object-cover"
+                                    className="object-cover sm:w-auto w-full"
                                 />
                             </div>
                             <div className="p-4">
@@ -635,7 +664,7 @@ export default function PopularesPage() {
                             </div>
                         </a>
 
-                        <a href="/blindados" className="transition-all hover:scale-105 bg-[#0168EC] text-white rounded-lg overflow-hidden w-[380px]">
+                        <a href="/blindados" className="transition-all hover:scale-105 bg-[#0168EC] text-white rounded-lg overflow-hidden sm:w-[380px]">
                             <div className="relative">
                                 <Image
                                     unoptimized
@@ -643,7 +672,7 @@ export default function PopularesPage() {
                                     alt="Carros Blindados"
                                     width={380}
                                     height={300}
-                                    className="object-cover"
+                                    className="object-cover sm:w-auto w-full"
                                 />
                             </div>
                             <div className="p-4">
@@ -654,7 +683,7 @@ export default function PopularesPage() {
                             </div>
                         </a>
 
-                        <a href="/vans" className="transition-all hover:scale-105 bg-[#0168EC] text-white rounded-lg overflow-hidden w-[380px]">
+                        <a href="/vans" className="transition-all hover:scale-105 bg-[#0168EC] text-white rounded-lg overflow-hidden sm:w-[380px]">
                             <div className="relative">
                                 <Image
                                     unoptimized
@@ -662,7 +691,7 @@ export default function PopularesPage() {
                                     alt="Vans"
                                     width={380}
                                     height={300}
-                                    className="object-cover"
+                                    className="object-cover sm:w-auto w-full"
                                 />
                             </div>
                             <div className="p-4">
@@ -798,19 +827,19 @@ export default function PopularesPage() {
                         </div>
 
                         <div>
-                            <h3 className="text-lg font-bold mb-6 text-[#0168ec]">CONHEÇA NOSSAS OUTRAS FROTAS</h3>
+                            <h3 className="text-lg font-bold mb-6 text-white">CONHEÇA NOSSAS OUTRAS FROTAS</h3>
 
                             <div className="flex flex-wrap gap-4">
                                 <a href="/" className="border text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors">
                                     EXECUTIVO
                                 </a>
-                                <a href="/populares" className="border text-white px-6 py-2 rounded-md font-medium hover:bg-[#0168ec] transition-colors">
+                                <a href="/populares" className="border bg-white px-6 py-2 rounded-md font-medium text-[#0168ec] hover:bg-gray-200 transition-colors">
                                     POPULAR
                                 </a>
-                                <a href="/vans" className="border text-white px-6 py-2 rounded-md font-medium hover:bg-[#0168ec] transition-colors">
+                                <a href="/vans" className="border text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors">
                                     VANS
                                 </a>
-                                <a href="/blindados" className="border text-white px-6 py-2 rounded-md font-medium hover:bg-[#0168ec] transition-colors">
+                                <a href="/blindados" className="border text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors">
                                     BLINDADOS
                                 </a>
                             </div>

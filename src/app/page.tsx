@@ -57,19 +57,16 @@ export default function Home() {
             <Image src="/logo.svg" alt="Shekinah" width={120} height={30} className="object-contain" />
           </div>
           <nav className="hidden md:flex space-x-8">
-            <Link href="#" className="text-white hover:text-[#0168ec] transition-colors">
-              SOBRE NÓS
-            </Link>
-            <Link href="#" className="text-white hover:text-[#0168ec] transition-colors">
+            <Link href="/#frota" className="text-white hover:text-[#0168ec] transition-colors ">
               FROTAS DE VEÍCULOS
             </Link>
-            <Link href="#" className="text-white hover:text-[#0168ec] transition-colors">
+            <Link href="/#blog" className="text-white hover:text-[#0168ec] transition-colors ">
               BLOG
             </Link>
-            <Link href="#" className="text-white hover:text-[#0168ec] transition-colors">
+            <Link href="/#faq" className="text-white hover:text-[#0168ec] transition-colors ">
               FAQ
             </Link>
-            <Link href="#" className="text-white hover:text-[#0168ec] transition-colors">
+            <Link href="/#contato" className="text-white hover:text-[#0168ec] transition-colors ">
               CONTATO
             </Link>
           </nav>
@@ -77,7 +74,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative h-screen">
+      <section className="relative h-screen z-0">
         <div className="absolute inset-0 z-0">
           {banners[currentBanner] && (
             <Image
@@ -117,17 +114,11 @@ export default function Home() {
               <br />
               E PONTUALIDADE PARA SEUS TRAJETOS.
             </p>
-            <button className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+            <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
               FAÇA UM ORÇAMENTO
-            </button>
+            </a>
           </div>
         </div>
-
-        {/* Vehicle indicator */}
-        <div className="absolute bottom-8 right-8 px-4 py-2 rounded text-white text-sm">
-          JEEP COMMANDER
-        </div>
-
         {/* Dots navigation */}
         <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-20">
           {banners.map((_, index) => (
@@ -186,7 +177,7 @@ export default function Home() {
           <h2 className="text-2xl font-bold mb-12 text-center">ALGUMAS MARCAS QUE JÁ TRABALHAMOS</h2>
           <div className="flex gap-6 justify-center flex-wrap">
             {["bmw", "alok", "amazon", "brasal", "saga", "gustavo-lima", "jbs", "kia-karnival", "mercedez", "latam", "mcdonalds", "prosegur", "sicoob"].map((brand) => (
-              <div key={brand} className="bg-[#151515] p-4 rounded-md flex items-center justify-center w-[200px] h-[100px]">
+              <div key={brand} className="bg-[#151515] p-4 rounded-md flex items-center justify-center w-[100px] h-[100px] sm:w-[200px] sm:h-[100px]">
                 <Image
                   src={`/brands/${brand}.svg?height=60&width=200`}
                   alt={`Brand ${brand}`}
@@ -248,7 +239,7 @@ export default function Home() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
+            <div className="flex flex-col">
               <h2 className="text-2xl font-bold mb-6 text-[#0168ec]">
                 ESTAMOS LOCALIZADOS EM
                 <br />
@@ -263,9 +254,9 @@ export default function Home() {
                   TEMOS UMA FROTA MODERNA E EXECUTIVA EM PERFEITO ESTADO PARA OFERECER O MELHOR CONFORTO E SEGURANÇA.
                 </p>
               </div>
-              <button className=" cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors mt-8">
+              <a href={process.env.NEXT_PUBLIC_WPP} className="flex self-start cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors mt-8">
                 FAÇA UM ORÇAMENTO
-              </button>
+              </a>
             </div>
             <div>
               <Image
@@ -282,7 +273,7 @@ export default function Home() {
       </section>
 
       {/* Fleet Section */}
-      <section className="py-16">
+      <section id="frota" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold mb-8 text-[#0168ec]">FROTAS DE VEÍCULOS</h2>
           {/* <div className="flex space-x-4 mb-12">
@@ -358,10 +349,10 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <button className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center">
+              <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center">
                 QUERO SABER MAIS
                 <ArrowRight className="ml-2" size={16} />
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -433,7 +424,7 @@ export default function Home() {
       </section>
 
       {/* Blog Section */}
-      <section className="py-16 bg-black">
+      <section id="blog" className="py-16 bg-black">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold mb-12 text-[#0168ec]">NOSSO BLOG</h2>
 
@@ -448,12 +439,12 @@ export default function Home() {
                       alt={`Blog post ${post}`}
                       width={500}
                       height={550}
-                      className="object-cover"
+                                                          className="object-cover sm:w-auto w-full"
                     />
                   </div>
                   <div className="p-4">
                     <h3 className="capitalize text-lg font-bold mb-2">{post?.title}</h3>
-                    <p className="text-sm text-gray-400 mb-3" dangerouslySetInnerHTML={{__html: post?.content.slice(0,50) + "..."}}></p>
+                    <p className="text-sm text-gray-400 mb-3" dangerouslySetInnerHTML={{ __html: post?.content.slice(0, 50) + "..." }}></p>
                     <Link href="#" className="text-[#0168ec] text-sm hover:underline">
                       Leia mais
                     </Link>
@@ -487,7 +478,7 @@ export default function Home() {
           <h2 className="text-2xl font-bold mb-12 text-center text-[#0168ec]">OUTRAS CATEGORIAS DE VEÍCULOS</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
-            <a href="/populares" className="transition-all hover:scale-105 bg-[#151515] rounded-lg overflow-hidden w-[380px]">
+            <a href="/populares" className="transition-all hover:scale-105 bg-[#151515] rounded-lg overflow-hidden sm:w-[380px]">
               <div className="relative">
                 <Image
                   unoptimized
@@ -495,7 +486,7 @@ export default function Home() {
                   alt="Carros Populares"
                   width={380}
                   height={300}
-                  className="object-cover"
+                  className="object-cover sm:w-auto w-full"
                 />
               </div>
               <div className="p-4">
@@ -506,7 +497,7 @@ export default function Home() {
               </div>
             </a>
 
-            <a href="/blindados" className="transition-all hover:scale-105 bg-[#151515] rounded-lg overflow-hidden w-[380px]">
+            <a href="/blindados" className="transition-all hover:scale-105 bg-[#151515] rounded-lg overflow-hidden sm:w-[380px]">
               <div className="relative">
                 <Image
                   unoptimized
@@ -514,7 +505,7 @@ export default function Home() {
                   alt="Carros Blindados"
                   width={380}
                   height={300}
-                  className="object-cover"
+                                                      className="object-cover sm:w-auto w-full"
                 />
               </div>
               <div className="p-4">
@@ -525,7 +516,7 @@ export default function Home() {
               </div>
             </a>
 
-            <a href="/vans" className="transition-all hover:scale-105 bg-[#151515] rounded-lg overflow-hidden w-[380px]">
+            <a href="/vans" className="transition-all hover:scale-105 bg-[#151515] rounded-lg overflow-hidden sm:w-[380px]">
               <div className="relative">
                 <Image
                   unoptimized
@@ -533,7 +524,7 @@ export default function Home() {
                   alt="Vans"
                   width={380}
                   height={300}
-                  className="object-cover"
+                                                      className="object-cover sm:w-auto w-full"
                 />
               </div>
               <div className="p-4">
@@ -548,12 +539,12 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 bg-black">
+      <section id="faq" className="py-16 bg-black">
         <FaqSection />
       </section>
 
       {/* Contact Section */}
-      <section className="py-16 bg-black">
+      <section id="contato" className="py-16 bg-black">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
@@ -653,7 +644,9 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
             <div>
-              <Image src="/logo.svg" alt="Shekinah" width={180} height={45} className="object-contain mb-6" />
+              <a href="/" className="text-white font-bold text-2xl">
+                <Image src="/logo.svg" alt="Shekinah" width={180} height={45} className="object-contain mb-6" />
+              </a>
 
               <h3 className="text-lg font-bold mb-4">FALE CONOSCO</h3>
 
