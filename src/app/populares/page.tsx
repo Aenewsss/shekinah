@@ -183,14 +183,16 @@ export default function PopularesPage() {
                     {/* Car Categories */}
                     <div className="flex justify-center mt-8 space-x-4 overflow-x-auto pb-4 lg:flex-nowrap flex-wrap">
                         {["a", "b", "c", "d", "e"].map((group, index) => (
-                            <Image
-                                key={index}
-                                src={`/grupos/${group}.svg?height=200&width=120`}
-                                alt={group}
-                                width={200}
-                                height={120}
-                                className="object-contain"
-                            />
+                            <a href={process.env.NEXT_PUBLIC_WPP} className="hover:scale-105 transition-all">
+                                <Image
+                                    key={index}
+                                    src={`/grupos/${group}.svg?height=200&width=120`}
+                                    alt={group}
+                                    width={200}
+                                    height={120}
+                                    className="object-contain"
+                                />
+                            </a>
                         ))}
                     </div>
                 </div>
