@@ -133,7 +133,9 @@ export default function AdminDashboard() {
             await push(ref(db, "blogPosts"), {
                 title: data.title,
                 content: data.content,
+                description: data.description,
                 image: url,
+                createdAt: new Date().toISOString(),
             });
             setNewPost({ title: "", content: "" });
         } catch (err) {

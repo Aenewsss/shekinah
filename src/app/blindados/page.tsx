@@ -21,11 +21,11 @@ import {
     Shield,
     Award,
     Headphones,
-    PhoneIcon as WhatsApp,
 } from "lucide-react"
 import { useBanners } from "@/hooks/useBanners.hook"
 import { useFleets } from "@/hooks/useFleets.hook"
 import { useBlog } from "@/hooks/useBlog"
+import WhatsApp from "@/components/whatsapp"
 
 const vehicles = [
     {
@@ -117,7 +117,7 @@ export default function BlindadosPage() {
     const [activeVehicleIndex, setActiveVehicleIndex] = useState(0)
     const [activeThumbnail, setActiveThumbnail] = useState(0)
 
-    const posts = useBlog(); // 🔸 categoria de banner
+    const { visiblePosts: posts } = useBlog(); // 🔸 categoria de banner
     const banners = useBanners("blindados"); // 🔸 categoria de banner
     const fleets = useFleets("blindados"); // 🔸 categoria de banner
 
@@ -277,11 +277,7 @@ export default function BlindadosPage() {
             </section>
 
             {/* WhatsApp Button */}
-            <div className="fixed bottom-6 right-6 z-50">
-                <Link href="#" className="block bg-[#25D366] p-4 rounded-full shadow-lg hover:bg-opacity-90 transition-all">
-                    <WhatsApp size={32} color="white" />
-                </Link>
-            </div>
+            <WhatsApp />
 
             {/* Fleet Section */}
             <section id="frota" className="py-16">
@@ -569,7 +565,7 @@ export default function BlindadosPage() {
                     <div className="relative">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {posts.map((post) => (
-                                <div key={post} className="bg-[#151515] rounded-lg overflow-hidden">
+                                <div key={post.id} className="bg-[#151515] rounded-lg overflow-hidden">
                                     <div className="relative">
                                         <Image
                                             unoptimized

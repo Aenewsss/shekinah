@@ -9,7 +9,7 @@ const MAX_FILE_SIZE_MB = 2;
 const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024; // 1MB
 
 export default function BlogSection({ handleAddPost, blogPosts }: any) {
-    const [newPost, setNewPost] = useState({ title: '', content: '', image: null })
+    const [newPost, setNewPost] = useState({ title: '', content: '', image: null, description: '' })
 
     const getPreviewUrl = (file) => file ? URL.createObjectURL(file) : null;
 
@@ -45,6 +45,14 @@ export default function BlogSection({ handleAddPost, blogPosts }: any) {
                 placeholder="Título"
                 value={newPost.title}
                 onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
+                className="w-full p-2 border rounded mt-4"
+            />
+
+            <input
+                type="text"
+                placeholder="Descrição curta"
+                value={newPost.description}
+                onChange={(e) => setNewPost({ ...newPost, description: e.target.value })}
                 className="w-full p-2 border rounded mt-4"
             />
 
