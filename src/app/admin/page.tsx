@@ -50,6 +50,7 @@ export default function AdminDashboard() {
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [searchCategory, setSearchCategory] = useState([]);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -113,6 +114,7 @@ export default function AdminDashboard() {
                 model: fleetData?.model,
                 description: fleetData?.description || "",
                 image: url,
+                category: fleetData?.category,
             });
             toast.success("Veículo adicionado com sucesso!");
             setNewFleet((prev) => ({ ...prev, [category.label]: { brand: "", model: "", description: "", image: null } }));
@@ -298,6 +300,24 @@ export default function AdminDashboard() {
                         {/* Frota */}
                         <section className="space-y-2">
                             <h3 className="text-xl font-semibold mb-2">Frota</h3>
+                            <div className="relative">
+                                <Input
+                                    placeholder="Categoria"
+                                    value={newFleet[category.label]?.category || ""}
+                                    onChange={(e) => {
+                                        setSearchCategory(fleet[category.label]?.filter(el => el.category?.toLowerCase()?.includes(newFleet[category.label]?.category.toLowerCase())))
+                                        setNewFleet((prev) => ({
+                                            ...prev,
+                                            [category.label]: { ...prev[category.label], category: e.target.value },
+                                        }))
+                                    }}
+                                />
+                                {Boolean(searchCategory.length) &&<div className="absolute top-10 bg-black text-white flex flex-column">
+                                    {
+                                        searchCategory?.map(el => <span key={el._id} className="p-2">{el.category}</span>)
+                                    }
+                                </div>}
+                            </div>
                             <Input
                                 placeholder="Marca"
                                 value={newFleet[category.label]?.brand || ""}

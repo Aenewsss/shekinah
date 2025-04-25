@@ -125,7 +125,10 @@ const features = [
 
 export default function VansPage() {
     const banners = useBanners("vans"); // 🔸 categoria de banner
-    const fleets = useFleets("vans"); // 🔸 categoria de banner
+
+    const [currentCategory, setCurrentCategory] = useState('');
+    const { fleets, categories } = useFleets({ type: "vans", category: currentCategory }); // 🔸 categoria de banner
+
     const { visiblePosts: posts } = useBlog(); // 🔸 categoria de banner
 
     const [currentFleet, setCurrentFleet] = useState(0);
@@ -285,21 +288,15 @@ export default function VansPage() {
             </section>
 
             {/* WhatsApp Button */}
-           <WhatsApp />
+            <WhatsApp />
 
             {/* Fleet Section */}
             <section id="frota" className="py-16">
                 <div className="container mx-auto px-4">
                     <h2 className="text-2xl font-bold mb-8 text-[#0168ec]">FROTAS DE VEÍCULOS</h2>
-                    {/* <div className="flex space-x-4 mb-12">
-            <button className="cursor-pointer bg-[#0168ec] text-white px-6 py-2 rounded-md font-medium">SEDAN</button>
-            <button className="cursor-pointer bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium">
-              SUV
-            </button>
-            <button className="cursor-pointer bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium">
-              LUXO
-            </button>
-          </div> */}
+                    {categories && <div className="flex space-x-4 mb-12">
+                        {categories.map((el, index) => <button onClick={() => setCurrentCategory(el)} className={`cursor-pointer ${(currentCategory == el || (!currentCategory && index == 0)) ? 'bg-[#0168ec]' : 'bg-transparent border-gray-600'} text-white px-6 py-2 rounded-md font-medium uppercase`}>{el}</button>)}
+                    </div>}
 
                     {/* Vehicle Showcase */}
                     <div className="relative">
@@ -324,7 +321,7 @@ export default function VansPage() {
                         </div>
 
                         <div className="relative mb-8">
-                            <div className="text-center md:-mb-20 -mb-10">
+                            <div className="text-center md:-mb-6 -mb-6">
                                 <h3 className="md:text-3xl text-2xl font-medium text-gray-400">{fleets[currentFleet]?.brand || "Mercedez"}</h3>
                                 <h2 className="md:text-9xl text-7xl font-bold">{fleets[currentFleet]?.model || "Splinter"}</h2>
                             </div>
@@ -461,8 +458,8 @@ export default function VansPage() {
                 </div>
             </section>
 
-               {/* Testimonials Section */}
-               <section className="py-16 bg-black">
+            {/* Testimonials Section */}
+            <section className="py-16 bg-black">
                 <div className="container mx-auto px-4">
                     <div className="flex gap-4 md:flex-nowrap flex-wrap">
                         <div className="flex flex-col gap-4 md:w-auto w-full">
@@ -579,7 +576,7 @@ export default function VansPage() {
                                             alt={`Blog post ${post}`}
                                             width={500}
                                             height={550}
-                                                                                className="object-cover sm:w-auto w-full"
+                                            className="object-cover sm:w-auto w-full"
                                         />
                                     </div>
                                     <div className="p-4">
@@ -626,7 +623,7 @@ export default function VansPage() {
                                     alt="Carros Populares"
                                     width={380}
                                     height={300}
-                                                                        className="object-cover sm:w-auto w-full"
+                                    className="object-cover sm:w-auto w-full"
                                 />
                             </div>
                             <div className="p-4">
@@ -645,7 +642,7 @@ export default function VansPage() {
                                     alt="Carros Blindados"
                                     width={380}
                                     height={300}
-                                                                        className="object-cover sm:w-auto w-full"
+                                    className="object-cover sm:w-auto w-full"
                                 />
                             </div>
                             <div className="p-4">
@@ -664,7 +661,7 @@ export default function VansPage() {
                                     alt="Vans"
                                     width={380}
                                     height={300}
-                                                                        className="object-cover sm:w-auto w-full"
+                                    className="object-cover sm:w-auto w-full"
                                 />
                             </div>
                             <div className="p-4">

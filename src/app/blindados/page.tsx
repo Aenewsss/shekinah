@@ -119,7 +119,9 @@ export default function BlindadosPage() {
 
     const { visiblePosts: posts } = useBlog(); // 🔸 categoria de banner
     const banners = useBanners("blindados"); // 🔸 categoria de banner
-    const fleets = useFleets("blindados"); // 🔸 categoria de banner
+
+    const [currentCategory, setCurrentCategory] = useState('');
+    const { fleets, categories } = useFleets({ type: "blindados", category: currentCategory }); // 🔸 categoria de banner
 
     const [currentFleet, setCurrentFleet] = useState(0);
     const [currentBanner, setCurrentBanner] = useState(0);
@@ -283,15 +285,9 @@ export default function BlindadosPage() {
             <section id="frota" className="py-16">
                 <div className="container mx-auto px-4">
                     <h2 className="text-2xl font-bold mb-8 text-[#0168ec]">FROTAS DE VEÍCULOS</h2>
-                    {/* <div className="flex space-x-4 mb-12">
-            <button className="cursor-pointer bg-[#0168ec] text-white px-6 py-2 rounded-md font-medium">SEDAN</button>
-            <button className="cursor-pointer bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium">
-              SUV
-            </button>
-            <button className="cursor-pointer bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium">
-              LUXO
-            </button>
-          </div> */}
+                    {categories && <div className="flex space-x-4 mb-12">
+                        {categories.map((el, index) => <button onClick={() => setCurrentCategory(el)} className={`cursor-pointer ${(currentCategory == el || (!currentCategory && index == 0)) ? 'bg-[#0168ec]' : 'bg-transparent border-gray-600'} text-white px-6 py-2 rounded-md font-medium uppercase`}>{el}</button>)}
+                    </div>}
 
                     {/* Vehicle Showcase */}
                     <div className="relative">
@@ -316,7 +312,7 @@ export default function BlindadosPage() {
                         </div>
 
                         <div className="relative mb-8">
-                            <div className="text-center md:-mb-20 -mb-10">
+                            <div className="text-center md:-mb-6 -mb-6">
                                 <h3 className="md:text-3xl text-2xl font-medium text-gray-400">{fleets[currentFleet]?.brand || "Range"}</h3>
                                 <h2 className="md:text-9xl text-7xl font-bold">{fleets[currentFleet]?.model || "Rover"}</h2>
                             </div>

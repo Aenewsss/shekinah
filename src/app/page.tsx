@@ -27,11 +27,13 @@ import WhatsApp from "@/components/whatsapp"
 
 export default function Home() {
   const banners = useBanners("executivos"); // 🔸 categoria de banner
-  const fleets = useFleets("executivos"); // 🔸 categoria de banner
   const { visiblePosts: posts } = useBlog(); // 🔸 categoria de banner
-
+  
   const [currentFleet, setCurrentFleet] = useState(0);
   const [currentBanner, setCurrentBanner] = useState(0);
+
+  const [currentCategory, setCurrentCategory] = useState('');
+  const { fleets, categories } = useFleets({ type: "executivos", category: currentCategory }); // 🔸 categoria de banner
 
   useEffect(() => {
     if (!banners.length) return;
@@ -264,15 +266,9 @@ export default function Home() {
       <section id="frota" className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold mb-8 text-[#0168ec]">FROTAS DE VEÍCULOS</h2>
-          {/* <div className="flex space-x-4 mb-12">
-            <button className="cursor-pointer bg-[#0168ec] text-white px-6 py-2 rounded-md font-medium">SEDAN</button>
-            <button className="cursor-pointer bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium">
-              SUV
-            </button>
-            <button className="cursor-pointer bg-transparent border border-gray-600 text-white px-6 py-2 rounded-md font-medium">
-              LUXO
-            </button>
-          </div> */}
+          {categories && <div className="flex space-x-4 mb-12">
+            {categories.map((el, index) => <button onClick={() => setCurrentCategory(el)} className={`cursor-pointer ${(currentCategory == el || (!currentCategory && index == 0)) ? 'bg-[#0168ec]' : 'bg-transparent border-gray-600'} text-white px-6 py-2 rounded-md font-medium uppercase`}>{el}</button>)}
+          </div>}
 
           {/* Vehicle Showcase */}
           <div className="relative">
@@ -297,7 +293,7 @@ export default function Home() {
             </div>
 
             <div className="relative mb-8">
-              <div className="text-center -mb-20">
+              <div className="text-center -mb-6">
                 <h3 className="text-3xl font-medium text-gray-400">{fleets[currentFleet]?.brand || "Mercedez"}</h3>
                 <h2 className="text-9xl font-bold">{fleets[currentFleet]?.model || "S580"}</h2>
               </div>
