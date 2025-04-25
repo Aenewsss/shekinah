@@ -20,6 +20,7 @@ import {
 import { useBanners } from "@/hooks/useBanners.hook"
 import { useBlog } from "@/hooks/useBlog"
 import WhatsApp from "@/components/whatsapp"
+import { useFleets } from "@/hooks/useFleets.hook"
 
 const testimonials = [
     {
@@ -84,8 +85,16 @@ export default function PopularesPage() {
     const banners = useBanners("populares"); // 🔸 categoria de banner
     const { visiblePosts: posts } = useBlog(); // 🔸 categoria de banner
 
-    const [selectedCategory, setSelectedCategory] = useState("POPULAR")
+    const [currentCategory, setCurrentCategory] = useState('');
+    const { fleets, categories } = useFleets({ type: "populares", category: currentCategory }); // 🔸 categoria de banner
+
     const [currentBanner, setCurrentBanner] = useState(0);
+    const itemsPerPage = 6;
+    const [currentPage, setCurrentPage] = useState(0);
+    
+    // Cálculo automático de start e end
+    const start = currentPage * itemsPerPage;
+    const end = start + itemsPerPage;
 
     useEffect(() => {
         if (!banners.length) return;
@@ -102,6 +111,16 @@ export default function PopularesPage() {
                 <Star key={i} size={16} className={i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"} />
             ))
     }
+
+    function handleFleetChange(direction: "left" | "right") {
+        const totalPages = Math.ceil(fleets.length / itemsPerPage);
+      
+        if (direction === "left") {
+          setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+        } else {
+          setCurrentPage((prev) => (prev + 1) % totalPages);
+        }
+      }
 
     return (
         <main className="min-h-screen bg-white text-black">
@@ -183,7 +202,7 @@ export default function PopularesPage() {
                     {/* Car Categories */}
                     <div className="flex justify-center mt-8 space-x-4 overflow-x-auto pb-4 lg:flex-nowrap flex-wrap">
                         {["a", "b", "c", "d", "e"].map((group, index) => (
-                            <a href={process.env.NEXT_PUBLIC_WPP} className="hover:scale-105 transition-all">
+                            <a key={index} href={process.env.NEXT_PUBLIC_WPP} className="hover:scale-105 transition-all">
                                 <Image
                                     key={index}
                                     src={`/grupos/${group}.svg?height=200&width=120`}
@@ -292,6 +311,9 @@ export default function PopularesPage() {
                 <div className="container mx-auto px-4">
                     <h2 className="text-2xl font-bold mb-2 text-center">CONFIRA NOSSA FROTA</h2>
                     <p className="text-gray-600 mb-8 text-center">Escolha o veículo que melhor atende às suas necessidades</p>
+                    {categories && <div className="flex space-x-4 mb-12">
+                        {categories.map((el, index) => <button onClick={() => setCurrentCategory(el)} className={`cursor-pointer ${(currentCategory == el || (!currentCategory && index == 0)) ? 'bg-[#0168ec] text-white' : 'bg-transparent text-[#0168ec] border border-[#0168ec]'} px-6 py-2 rounded-md font-medium uppercase`}>{el}</button>)}
+                    </div>}
 
                     {/* Category Tabs */}
                     {/* <div className="flex justify-center mb-8 space-x-4">
@@ -310,8 +332,8 @@ export default function PopularesPage() {
                     </div> */}
 
                     {/* Cars Grid */}
-                    <div className="flex justify-center">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="flex justify-center relative">
+                        {!fleets.length && <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
                                 { name: "gol", price: "99.90" },
                                 { name: "onix", price: "99.90" },
@@ -325,30 +347,7 @@ export default function PopularesPage() {
                                     <div className="p-4">
                                         <div className="flex justify-between items-center mb-4">
                                             <h3 className="text-xl font-bold uppercase">{car.name}</h3>
-                                            {/* <div className="text-[#0168ec] font-bold">
-                                                R$ {car.price}
-                                                <span className="text-xs text-gray-500">/dia</span>
-                                            </div> */}
                                         </div>
-
-                                        {/* <div className="flex justify-between mb-4">
-                                            <div className="flex flex-col items-center">
-                                                <Image src="/placeholder.svg?height=24&width=24" alt="Portas" width={24} height={24} />
-                                                <span className="text-xs text-gray-500 mt-1">4 Portas</span>
-                                            </div>
-                                            <div className="flex flex-col items-center">
-                                                <Image src="/placeholder.svg?height=24&width=24" alt="Ar" width={24} height={24} />
-                                                <span className="text-xs text-gray-500 mt-1">Ar</span>
-                                            </div>
-                                            <div className="flex flex-col items-center">
-                                                <Image src="/placeholder.svg?height=24&width=24" alt="Pessoas" width={24} height={24} />
-                                                <span className="text-xs text-gray-500 mt-1">5 Pessoas</span>
-                                            </div>
-                                            <div className="flex flex-col items-center">
-                                                <Image src="/placeholder.svg?height=24&width=24" alt="Malas" width={24} height={24} />
-                                                <span className="text-xs text-gray-500 mt-1">2 Malas</span>
-                                            </div>
-                                        </div> */}
 
                                         <button className="cursor-pointer bg-[#0168ec] text-white w-full py-2 rounded-md font-medium hover:bg-blue-700 transition-colors">
                                             <a href={process.env.NEXT_PUBLIC_WPP} >
@@ -358,7 +357,35 @@ export default function PopularesPage() {
                                     </div>
                                 </div>
                             ))}
-                        </div>
+                        </div>}
+                        {Boolean(fleets.length) && <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {fleets.slice(start, end).map((car, index) => (
+                                <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md lg:w-[390px] md:w-[290px] min-w-[290px]">
+                                    <Image src={car.image} alt={car.model} width={390} height={260} className="object-cover w-full" />
+                                    <div className="p-4">
+                                        <div className="flex justify-between items-center mb-4">
+                                            <h3 className="text-xl font-bold uppercase">{car.name}</h3>
+                                        </div>
+
+                                        <button className="cursor-pointer bg-[#0168ec] text-white w-full py-2 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                                            <a href={process.env.NEXT_PUBLIC_WPP} >
+                                                RESERVAR AGORA
+                                            </a>
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>}
+                        {fleets.length > 6 &&
+                            <>
+                                <button onClick={() => handleFleetChange("left")} className="cursor-pointer absolute left-0 top-1/2 text-white -translate-y-1/2 bg-[#0168ec] p-2 rounded-full">
+                                    <ChevronLeft size={24} />
+                                </button>
+                                <button onClick={() => handleFleetChange("right")} className="cursor-pointer absolute right-0 top-1/2 text-white -translate-y-1/2 bg-[#0168ec] p-2 rounded-full">
+                                    <ChevronRight size={24} />
+                                </button>
+                            </>
+                        }
                     </div>
                     <div className="text-center mt-8">
                         <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">

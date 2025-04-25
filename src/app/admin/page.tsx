@@ -117,7 +117,7 @@ export default function AdminDashboard() {
                 category: fleetData?.category,
             });
             toast.success("Veículo adicionado com sucesso!");
-            setNewFleet((prev) => ({ ...prev, [category.label]: { brand: "", model: "", description: "", image: null } }));
+            setNewFleet((prev) => ({ ...prev, [category.label]: { brand: "", model: "", description: "", image: null, category: '' } }));
         } catch (err) {
             toast.error("Erro ao adicionar veículo")
         } finally {
