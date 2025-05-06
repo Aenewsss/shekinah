@@ -200,14 +200,15 @@ export default function AdminDashboard() {
         try {
             // Remover do storage
             const urlPath = new URL(imageUrl).pathname;
+            console.log(urlPath, categoryLabel, fleetId)
             const storagePath = decodeURIComponent(urlPath.split("/o/")[1]); // preserva as barras
             const storageReference = storageRef(storage, storagePath);
 
-            await deleteObject(storageReference);
-
             // Remover do database
-            const fleetRef = ref(db, `/fleets/${categoryLabel}/${fleetId}`);
+            const fleetRef = ref(db, `/fleet/${categoryLabel}/${fleetId}`);
             await remove(fleetRef);
+
+            await deleteObject(storageReference);
 
             console.log("Veículo removido com sucesso");
         } catch (err) {
@@ -312,7 +313,7 @@ export default function AdminDashboard() {
                                         }))
                                     }}
                                 />
-                                {Boolean(searchCategory.length) &&<div className="absolute top-10 bg-black text-white flex flex-column">
+                                {Boolean(searchCategory.length) && <div className="absolute top-10 bg-black text-white flex flex-column">
                                     {
                                         searchCategory?.map(el => <span key={el._id} className="p-2">{el.category}</span>)
                                     }
@@ -380,7 +381,7 @@ export default function AdminDashboard() {
                                         </div>
                                         {hoveredFleet === f.id && (
                                             <button
-                                                onClick={() => handleDeleteFleet(category.label, f.id, f.url)}
+                                                onClick={() => handleDeleteFleet(category.label, f.id, f.image)}
                                                 className=" cursor-pointer hover:scale-105 transition-all absolute top-1 right-1 bg-red-600 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center shadow hover:bg-red-700"
                                             >
                                                 ×
