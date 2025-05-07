@@ -52,7 +52,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen text-white">
       {/* Header */}
       <header className="absolute top-0 left-0 right-0 z-10">
         <div className="container mx-auto px-4 py-6 flex justify-between items-center">
@@ -408,7 +408,7 @@ export default function Home() {
       </section>
 
       {/* Blog Section */}
-      <section id="blog" className="py-16 bg-black">
+      <section id="blog" className="py-16 ">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-bold mb-12 text-[#0168ec]">NOSSO BLOG</h2>
 
@@ -457,7 +457,7 @@ export default function Home() {
       </section>
 
       {/* Vehicle Categories Section */}
-      <section className="py-16 bg-black">
+      <section className="py-16 ">
         <div className="container mx-auto px-4 flex flex-col items-center">
           <h2 className="text-2xl font-bold mb-12 text-center text-[#0168ec]">OUTRAS CATEGORIAS DE VEÍCULOS</h2>
 
@@ -523,12 +523,12 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-16 bg-black">
+      <section id="faq" className="py-16 ">
         <FaqSection />
       </section>
 
       {/* Contact Section */}
-      <section id="contato" className="py-16 bg-black">
+      <section id="contato" className="py-16 ">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
@@ -622,7 +622,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-black pt-16 pb-8">
+      <footer className=" pt-16 pb-8">
         <div className="container mx-auto px-4">
           <div className="border-t border-[#0168ec] mb-16"></div>
 
