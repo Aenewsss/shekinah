@@ -317,8 +317,8 @@ export default function AdminDashboard() {
                                 <div className="flex justify-between mb-4 items-center">
                                     <h3 className="text-xl font-semibold mb-0 p-0">Novo veículo</h3>
                                     <Button disabled={!(Boolean(newFleet[category.label]?.image) && newFleet[category.label]?.brand && newFleet[category.label]?.model)} className="mt-4" color={category.color} onClick={() => {
-                                        newFleet[category.label].id ? handleAddFleet(category) : handleUpdateFleet(category.label)
-                                    }}>{newFleet[category.label].id ? 'Editar' : 'Adicionar'} Veículo</Button>
+                                        newFleet[category.label]?.id ? handleAddFleet(category) : handleUpdateFleet(category.label)
+                                    }}>{newFleet[category.label]?.id ? 'Editar' : 'Adicionar'} Veículo</Button>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <div className="relative">
@@ -326,18 +326,25 @@ export default function AdminDashboard() {
                                             placeholder="Categoria"
                                             value={newFleet[category.label]?.category || ""}
                                             onChange={(e) => {
-                                                setSearchCategory(fleet[category.label]?.filter(el => el.category?.toLowerCase()?.includes(newFleet[category.label]?.category?.toLowerCase())))
                                                 setNewFleet((prev) => ({
                                                     ...prev,
                                                     [category.label]: { ...prev[category.label], category: e.target.value },
                                                 }))
                                             }}
                                         />
-                                        <div className="absolute top-10 bg-black text-white flex flex-column">
+                                        {Boolean(Array.from(new Set(fleet[category.label]?.map(el => el.category))).length) && <select onChange={(e: any) => {
+                                            setNewFleet((prev) => ({
+                                                ...prev,
+                                                [category.label]: { ...prev[category.label], category: e.target.value },
+                                            }))
+                                        }} className="border border-white bg-black text-gray-500 flex flex-col gap-1 py-2 w-full">
+                                            <option value="">Clique para selecionar categoria</option>
                                             {
-                                                searchCategory?.map(el => JSON.parse(el))?.map(el => <span key={el._id} className="p-2">{el.category}</span>)
+                                                Array.from(new Set(fleet[category.label]?.map(el => el.category)))?.map((el: string, index) => <option onClick={() => {
+
+                                                }} value={el} key={index} className="px-2">{el}</option>)
                                             }
-                                        </div>
+                                        </select>}
                                     </div>
                                     <Input
                                         placeholder="Marca"
