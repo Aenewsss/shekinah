@@ -82,6 +82,17 @@ export default function AdminDashboard() {
         }
     };
 
+    function handleEditFleet(category: string, id: string) {
+        const fleetToEdit = fleet[category].find(el => el.id == id)
+        console.log(fleetToEdit)
+        setNewFleet({ [category]: fleetToEdit })
+        setShowAddFleet(true)
+    }
+
+    function handleUpdateFleet(category: string) {
+
+    }
+
     const handleAddFleet = async (category) => {
         setLoading(true)
         try {
@@ -258,7 +269,7 @@ export default function AdminDashboard() {
 
             <div className="flex  items-center justify-center w-full gap-4">
                 {
-                    categories.map((el, index) => <span onClick={() => setActiveTab(index)} className={`cursor-pointer capitalize p-2 w-30 text-center rounded-md transition-all hover:bg-blue-900 hover:border-blue-900 ${index == activeTab ? 'bg-blue-700 border border-blue-700' : 'bg-transparent border border-white'}`}>{el.label}</span>)
+                    categories.map((el, index) => <span key={index} onClick={() => setActiveTab(index)} className={`cursor-pointer capitalize p-2 w-30 text-center rounded-md transition-all hover:bg-blue-900 hover:border-blue-900 ${index == activeTab ? 'bg-blue-700 border border-blue-700' : 'bg-transparent border border-white'}`}>{el.label}</span>)
                 }
             </div>
 
@@ -305,7 +316,9 @@ export default function AdminDashboard() {
                             <div className="relative z-20 bg-black h-[90%] w-1/2 p-14 overflow-y-auto overflow-x-hidden">
                                 <div className="flex justify-between mb-4 items-center">
                                     <h3 className="text-xl font-semibold mb-0 p-0">Novo veículo</h3>
-                                    <Button disabled={!(Boolean(newFleet[category.label]?.image) && newFleet[category.label]?.brand && newFleet[category.label]?.model)} className="mt-4" color={category.color} onClick={() => handleAddFleet(category)}>Adicionar Veículo</Button>
+                                    <Button disabled={!(Boolean(newFleet[category.label]?.image) && newFleet[category.label]?.brand && newFleet[category.label]?.model)} className="mt-4" color={category.color} onClick={() => {
+                                        newFleet[category.label].id ? handleAddFleet(category) : handleUpdateFleet(category.label)
+                                    }}>{newFleet[category.label].id ? 'Editar' : 'Adicionar'} Veículo</Button>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <div className="relative">
@@ -370,7 +383,7 @@ export default function AdminDashboard() {
                                         )}
                                     />
                                     {newFleet[category.label]?.image && (
-                                        <img src={getPreviewUrl(newFleet[category.label].image)} alt="preview veículo" className="max-w-[500px] my-2" />
+                                        <img src={typeof newFleet[category.label].image == 'string' ? newFleet[category.label].image : getPreviewUrl(newFleet[category.label].image)} alt="preview veículo" className="max-w-[500px] my-2" />
                                     )}
                                     <div className="pt-5">
                                         <Label htmlFor={`fleet-aux-${category.label}`}>Escolher imagens auxiliares</Label>
@@ -387,7 +400,7 @@ export default function AdminDashboard() {
                                         />
                                         <div className="flex gap-2 flex-wrap">
                                             {newFleet[category.label]?.imagesAux?.map((el, index) =>
-                                                <img key={index} src={getPreviewUrl(el)} alt="preview veículo" className="w-[300px] my-2 object-cover" />
+                                                <img key={index} src={typeof el == 'string' ? el : getPreviewUrl(el)} alt="preview veículo" className="w-[300px] my-2 object-cover" />
                                             )}
                                         </div>
                                     </div>
@@ -454,6 +467,14 @@ export default function AdminDashboard() {
                                                 className=" cursor-pointer hover:scale-105 transition-all absolute top-1 right-1 bg-red-600 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center shadow hover:bg-red-700"
                                             >
                                                 ×
+                                            </button>
+                                        )}
+                                        {hoveredFleet === f.id && (
+                                            <button
+                                                onClick={() => handleEditFleet(category.label, f.id)}
+                                                className="cursor-pointer hover:scale-105 transition-all absolute bottom-1 right-1 bg-white text-black p-2 rounded-md text-xs flex items-center justify-center shadow hover:bg-amber-50"
+                                            >
+                                                Editar
                                             </button>
                                         )}
                                     </li>
