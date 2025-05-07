@@ -312,10 +312,10 @@ export default function BlindadosPage() {
                         </div>
 
                         <div className="relative mb-8">
-                            <div className="text-center md:-mb-6 -mb-6">
+                            {/* <div className="text-center md:-mb-6 -mb-6">
                                 <h3 className="md:text-3xl text-2xl font-medium text-gray-400">{fleets[currentFleet]?.brand || "Range"}</h3>
                                 <h2 className="md:text-9xl text-7xl font-bold">{fleets[currentFleet]?.model || "Rover"}</h2>
-                            </div>
+                            </div> */}
                             <Image
                                 unoptimized
                                 src={fleets[currentFleet]?.image || "/range-rover.png?height=400&width=800"}
@@ -336,12 +336,12 @@ export default function BlindadosPage() {
                             }
                         </div>
 
-                        <div className="grid grid-cols-4 gap-4 mb-8">
-                            {[1, 2, 3, 4].map((img) => (
-                                <div key={img} className="border-8 border-white rounded-lg overflow-hidden">
+                        <div className="grid grid-cols-4 gap-4 mb-8 -mt-10">
+                            {fleets[currentFleet]?.imagesAux?.map((img) => (
+                                <div key={img} className="border-2 border-white rounded-lg overflow-hidden">
                                     <Image
                                         unoptimized
-                                        src={`/interior-mercedez/${img}.png?height=100&width=200`}
+                                        src={img}
                                         alt={`Interior ${img}`}
                                         width={200}
                                         height={100}

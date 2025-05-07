@@ -101,20 +101,31 @@ export default function AdminDashboard() {
         }
     };
 
+    console.log(newFleet)
+
     const handleAddFleet = async (category) => {
         setLoading(true)
         try {
             const fleetData = newFleet[category.label];
-            if (!fleetData?.image) return;
+            if (!fleetData?.image || !fleetData?.imagesAux) return;
             const storageReference = storageRef(storage, `fleet/${category.label}/${fleetData.image.name}`);
             await uploadBytes(storageReference, fleetData.image);
             const url = await getDownloadURL(storageReference);
+
+            const auxUrls = await Promise.all(fleetData?.imagesAux?.map(async el => {
+                const storageReference = storageRef(storage, `fleet/${category.label}/${el.name}`);
+                await uploadBytes(storageReference, el);
+                const url = await getDownloadURL(storageReference);
+                return url
+            }))
+
             await push(ref(db, `fleet/${category.label}`), {
                 brand: fleetData?.brand,
                 model: fleetData?.model,
                 description: fleetData?.description || "",
                 image: url,
                 category: fleetData?.category,
+                imagesAux: auxUrls
             });
             toast.success("Veículo adicionado com sucesso!");
             setNewFleet((prev) => ({ ...prev, [category.label]: { brand: "", model: "", description: "", image: null, category: '' } }));
@@ -195,18 +206,26 @@ export default function AdminDashboard() {
         }
     };
 
-    const handleDeleteFleet = async (categoryLabel: string, fleetId: string, imageUrl: string) => {
+    const handleDeleteFleet = async (categoryLabel: string, fleetId: string, imageUrl: string, auxUrls?: string[]) => {
         setLoading(true)
         try {
             // Remover do storage
             const urlPath = new URL(imageUrl).pathname;
-            console.log(urlPath, categoryLabel, fleetId)
             const storagePath = decodeURIComponent(urlPath.split("/o/")[1]); // preserva as barras
             const storageReference = storageRef(storage, storagePath);
 
             // Remover do database
             const fleetRef = ref(db, `/fleet/${categoryLabel}/${fleetId}`);
             await remove(fleetRef);
+
+            if (auxUrls && auxUrls.length) {
+                await Promise.all(auxUrls?.map(async el => {
+                    const urlPath = new URL(el).pathname;
+                    const storagePath = decodeURIComponent(urlPath.split("/o/")[1]); // preserva as barras
+                    const storageReference = storageRef(storage, storagePath);
+                    await deleteObject(storageReference);
+                }))
+            }
 
             await deleteObject(storageReference);
 
@@ -255,9 +274,9 @@ export default function AdminDashboard() {
                 <Button className="bg-red-500 hover:bg-red-700" onClick={handleLogout}>Sair</Button>
             </div>
 
-            <section className="flex gap-10 xl:flex-nowrap flex-wrap">
+            <section className="flex gap-10 flex-wrap">
                 {categories.map((category) => (
-                    <div key={category.label} className="space-y-6 border border-gray-300 p-4 rounded-2xl shadow-lg shadow-gray-900 w-[500px]">
+                    <div key={category.label} className="space-y-6 border border-gray-300 p-4 rounded-2xl shadow-lg shadow-gray-900 w-[600px]">
                         <h2 className="text-2xl capitalize font-bold" style={{ color: category.color }}>{category.label}</h2>
 
                         {/* Banners */}
@@ -306,18 +325,18 @@ export default function AdminDashboard() {
                                     placeholder="Categoria"
                                     value={newFleet[category.label]?.category || ""}
                                     onChange={(e) => {
-                                        setSearchCategory(fleet[category.label]?.filter(el => el.category?.toLowerCase()?.includes(newFleet[category.label]?.category.toLowerCase())))
+                                        setSearchCategory(fleet[category.label]?.filter(el => el.category?.toLowerCase()?.includes(newFleet[category.label]?.category?.toLowerCase())))
                                         setNewFleet((prev) => ({
                                             ...prev,
                                             [category.label]: { ...prev[category.label], category: e.target.value },
                                         }))
                                     }}
                                 />
-                                {Boolean(searchCategory.length) && <div className="absolute top-10 bg-black text-white flex flex-column">
+                                {/* {Boolean(searchCategory.length) && <div className="absolute top-10 bg-black text-white flex flex-column">
                                     {
-                                        searchCategory?.map(el => <span key={el._id} className="p-2">{el.category}</span>)
+                                        Array.from(new Set(searchCategory?.map(el => JSON.stringify(el))))?.map(el => JSON.parse(el))?.map(el => <span key={el._id} className="p-2">{el.category}</span>)
                                     }
-                                </div>}
+                                </div>} */}
                             </div>
                             <Input
                                 placeholder="Marca"
@@ -365,6 +384,26 @@ export default function AdminDashboard() {
                             {newFleet[category.label]?.image && (
                                 <img src={getPreviewUrl(newFleet[category.label].image)} alt="preview veículo" className="w-40 my-2" />
                             )}
+                            <div className="pt-5">
+                                <Label htmlFor={`fleet-aux-${category.label}`}>Escolher imagens auxiliares</Label>
+                                <Input
+                                    id={`fleet-aux-${category.label}`}
+                                    hidden
+                                    type="file"
+                                    onChange={(e) => handleFileSelect(e.target.files?.[0] || null, (file) =>
+                                        setNewFleet((prev) => ({
+                                            ...prev,
+                                            [category.label]: { ...prev[category.label], imagesAux: [...(prev[category.label]?.imagesAux || []), file] },
+                                        }))
+                                    )}
+                                />
+                                <div className="flex gap-2 flex-wrap">
+                                    {newFleet[category.label]?.imagesAux?.map((el, index) =>
+                                        <img key={index} src={getPreviewUrl(el)} alt="preview veículo" className="w-20 my-2 object-cover" />
+                                    )}
+                                </div>
+                            </div>
+
                             <Button disabled={!(Boolean(newFleet[category.label]?.image) && newFleet[category.label]?.brand && newFleet[category.label]?.model)} className="mt-4" color={category.color} onClick={() => handleAddFleet(category)}>Adicionar Veículo</Button>
                             <ul className="mt-2 space-y-2">
                                 {(fleet[category.label] || []).map((f) => (
@@ -381,7 +420,7 @@ export default function AdminDashboard() {
                                         </div>
                                         {hoveredFleet === f.id && (
                                             <button
-                                                onClick={() => handleDeleteFleet(category.label, f.id, f.image)}
+                                                onClick={() => handleDeleteFleet(category.label, f.id, f.image, f.imagesAux)}
                                                 className=" cursor-pointer hover:scale-105 transition-all absolute top-1 right-1 bg-red-600 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center shadow hover:bg-red-700"
                                             >
                                                 ×
