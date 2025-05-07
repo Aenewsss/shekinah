@@ -10,34 +10,11 @@ import { Label } from "@/components/label";
 import { toast, ToastContainer } from "react-toastify";
 import Loader from "@/components/loader";
 import BlogSection from "./blog.section";
+import Image from "next/image";
 
 const categories = [{ label: "executivos", color: "#BE9C71" }, { label: "vans", color: "#F0F0F0" }, { label: "populares", color: "#0168EC" }, { label: "blindados", color: "#252525" }];
 const MAX_FILE_SIZE_MB = 2;
 const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024; // 1MB
-
-async function convertToWebP(file) {
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement("canvas");
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0);
-                canvas.toBlob((blob) => {
-                    const webpFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
-                        type: "image/webp",
-                    });
-                    resolve(webpFile);
-                }, "image/webp", 0.8);
-            };
-            img.src = event.target.result as string;
-        };
-        reader.readAsDataURL(file);
-    });
-}
 
 export default function AdminDashboard() {
     const [banners, setBanners] = useState({});
@@ -51,6 +28,9 @@ export default function AdminDashboard() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
     const [searchCategory, setSearchCategory] = useState([]);
+    const [activeTab, setActiveTab] = useState(0);
+    const [showAddBanner, setShowAddBanner] = useState(false);
+    const [showAddFleet, setShowAddFleet] = useState(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -98,10 +78,9 @@ export default function AdminDashboard() {
             toast.error("Erro ao adicionar banner");
         } finally {
             setLoading(false)
+            setShowAddBanner(false)
         }
     };
-
-    console.log(newFleet)
 
     const handleAddFleet = async (category) => {
         setLoading(true)
@@ -133,6 +112,7 @@ export default function AdminDashboard() {
             toast.error("Erro ao adicionar veículo")
         } finally {
             setLoading(false)
+            setShowAddFleet(false)
         }
     }
 
@@ -274,27 +254,156 @@ export default function AdminDashboard() {
                 <Button className="bg-red-500 hover:bg-red-700" onClick={handleLogout}>Sair</Button>
             </div>
 
-            <section className="flex gap-10 flex-wrap">
-                {categories.map((category) => (
-                    <div key={category.label} className="space-y-6 border border-gray-300 p-4 rounded-2xl shadow-lg shadow-gray-900 w-[600px]">
-                        <h2 className="text-2xl capitalize font-bold" style={{ color: category.color }}>{category.label}</h2>
+            <h2 className="text-3xl text-center mb-10 font-semibold">Páginas</h2>
 
+            <div className="flex  items-center justify-center w-full gap-4">
+                {
+                    categories.map((el, index) => <span onClick={() => setActiveTab(index)} className={`cursor-pointer capitalize p-2 w-30 text-center rounded-md transition-all hover:bg-blue-900 hover:border-blue-900 ${index == activeTab ? 'bg-blue-700 border border-blue-700' : 'bg-transparent border border-white'}`}>{el.label}</span>)
+                }
+            </div>
+
+            <section className="flex gap-10 flex-wrap -mt-10">
+                {categories.slice(activeTab, activeTab + 1)?.map((category) => (
+                    <div key={category.label} className="space-y-6 px-4 w-full">
+                        <div className="flex gap-4">
+                            <button onClick={() => setShowAddBanner(true)} className="cursor-pointer p-2 rounded-md bg-fuchsia-800">Novo bannner</button>
+                            <button onClick={() => setShowAddFleet(true)} className="cursor-pointer p-2 rounded-md bg-amber-600">Novo veículo</button>
+                        </div>
                         {/* Banners */}
-                        <section className="space-y-2">
-                            <h3 className="text-xl font-semibold mb-2">Banners</h3>
-                            <Label htmlFor={`banner-${category.label}`}>Escolher imagem do banner</Label>
-                            <Input
-                                id={`banner-${category.label}`}
-                                type="file"
-                                hidden
-                                onChange={(e) => handleFileSelect(e.target.files?.[0] || null, (file) =>
-                                    setNewBanners((prev) => ({ ...prev, [category.label]: file }))
+                        {showAddBanner && <section className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center z-20">
+                            <div onClick={() => setShowAddBanner(false)} className="absolute h-screen w-screen bg-black opacity-90 top-0 left-0 z-10"></div>
+                            <div className="relative z-20 bg-black h-[90%] p-14 overflow-y-auto overflow-x-hidden">
+                                <h3 className="text-xl font-semibold mb-2">Novo banner</h3>
+                                <div className="flex justify-between">
+                                    <Label className="max-w-[240px]" htmlFor={`banner-${category.label}`}>Escolher imagem do banner</Label>
+                                    {newBanners[category.label] && <Button disabled={!Boolean(newBanners[category.label])} color={category.color} className="mt-4" onClick={() => handleUploadBanner(category)}>Salvar Banner</Button>}
+                                </div>
+                                <Input
+                                    id={`banner-${category.label}`}
+                                    type="file"
+                                    hidden
+                                    onChange={(e) => handleFileSelect(e.target.files?.[0] || null, (file) =>
+                                        setNewBanners((prev) => ({ ...prev, [category.label]: file }))
+                                    )}
+                                />
+                                {newBanners[category.label] && (
+                                    <img src={getPreviewUrl(newBanners[category.label])} alt="preview banner" className="max-w-[1000px] my-2" />
                                 )}
-                            />
-                            {newBanners[category.label] && (
-                                <img src={getPreviewUrl(newBanners[category.label])} alt="preview banner" className="w-40 my-2" />
-                            )}
-                            <Button disabled={!Boolean(newBanners[category.label])} color={category.color} className="mt-4" onClick={() => handleUploadBanner(category)}>Salvar Banner</Button>
+                            </div>
+
+                            <button
+                                onClick={() => setShowAddBanner(false)}
+                                className=" cursor-pointer hover:scale-105 transition-all absolute z-20 top-10 left-10 bg-red-600 text-white p-2 rounded-full text-xs flex items-center justify-center shadow hover:bg-red-700"
+                            >
+                                × Fechar
+                            </button>
+                        </section>}
+
+                        {/* Frota */}
+                        {showAddFleet && <section className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center z-20">
+                            <div onClick={() => setShowAddFleet(false)} className="absolute h-screen w-screen bg-black opacity-90 top-0 left-0 z-10"></div>
+                            <div className="relative z-20 bg-black h-[90%] w-1/2 p-14 overflow-y-auto overflow-x-hidden">
+                                <div className="flex justify-between mb-4 items-center">
+                                    <h3 className="text-xl font-semibold mb-0 p-0">Novo veículo</h3>
+                                    <Button disabled={!(Boolean(newFleet[category.label]?.image) && newFleet[category.label]?.brand && newFleet[category.label]?.model)} className="mt-4" color={category.color} onClick={() => handleAddFleet(category)}>Adicionar Veículo</Button>
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <div className="relative">
+                                        <Input
+                                            placeholder="Categoria"
+                                            value={newFleet[category.label]?.category || ""}
+                                            onChange={(e) => {
+                                                setSearchCategory(fleet[category.label]?.filter(el => el.category?.toLowerCase()?.includes(newFleet[category.label]?.category?.toLowerCase())))
+                                                setNewFleet((prev) => ({
+                                                    ...prev,
+                                                    [category.label]: { ...prev[category.label], category: e.target.value },
+                                                }))
+                                            }}
+                                        />
+                                        <div className="absolute top-10 bg-black text-white flex flex-column">
+                                            {
+                                                searchCategory?.map(el => JSON.parse(el))?.map(el => <span key={el._id} className="p-2">{el.category}</span>)
+                                            }
+                                        </div>
+                                    </div>
+                                    <Input
+                                        placeholder="Marca"
+                                        value={newFleet[category.label]?.brand || ""}
+                                        onChange={(e) =>
+                                            setNewFleet((prev) => ({
+                                                ...prev,
+                                                [category.label]: { ...prev[category.label], brand: e.target.value },
+                                            }))
+                                        }
+                                    />
+                                    <Input
+                                        placeholder="Modelo"
+                                        value={newFleet[category.label]?.model || ""}
+                                        onChange={(e) =>
+                                            setNewFleet((prev) => ({
+                                                ...prev,
+                                                [category.label]: { ...prev[category.label], model: e.target.value },
+                                            }))
+                                        }
+                                    />
+                                    <Input
+                                        className="mb-4"
+                                        placeholder="Descrição"
+                                        value={newFleet[category.label]?.description || ""}
+                                        onChange={(e) =>
+                                            setNewFleet((prev) => ({
+                                                ...prev,
+                                                [category.label]: { ...prev[category.label], description: e.target.value },
+                                            }))
+                                        }
+                                    />
+                                    <Label htmlFor={`fleet-${category.label}`}>Escolher imagem do veículo</Label>
+                                    <Input
+                                        id={`fleet-${category.label}`}
+                                        hidden
+                                        type="file"
+                                        onChange={(e) => handleFileSelect(e.target.files?.[0] || null, (file) =>
+                                            setNewFleet((prev) => ({
+                                                ...prev,
+                                                [category.label]: { ...prev[category.label], image: file },
+                                            }))
+                                        )}
+                                    />
+                                    {newFleet[category.label]?.image && (
+                                        <img src={getPreviewUrl(newFleet[category.label].image)} alt="preview veículo" className="max-w-[500px] my-2" />
+                                    )}
+                                    <div className="pt-5">
+                                        <Label htmlFor={`fleet-aux-${category.label}`}>Escolher imagens auxiliares</Label>
+                                        <Input
+                                            id={`fleet-aux-${category.label}`}
+                                            hidden
+                                            type="file"
+                                            onChange={(e) => handleFileSelect(e.target.files?.[0] || null, (file) =>
+                                                setNewFleet((prev) => ({
+                                                    ...prev,
+                                                    [category.label]: { ...prev[category.label], imagesAux: [...(prev[category.label]?.imagesAux || []), file] },
+                                                }))
+                                            )}
+                                        />
+                                        <div className="flex gap-2 flex-wrap">
+                                            {newFleet[category.label]?.imagesAux?.map((el, index) =>
+                                                <img key={index} src={getPreviewUrl(el)} alt="preview veículo" className="w-[300px] my-2 object-cover" />
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setShowAddFleet(false)}
+                                className=" cursor-pointer hover:scale-105 transition-all absolute z-20 top-10 left-10 bg-red-600 text-white p-2 rounded-full text-xs flex items-center justify-center shadow hover:bg-red-700"
+                            >
+                                × Fechar
+                            </button>
+                        </section>}
+
+                        {/* Listagem banner */}
+                        <section>
+                            <h3 className="text-3xl font-semibold">Banners</h3>
                             <ul className="mt-2 flex gap-2 flex-wrap">
                                 {(banners[category.label] || []).map((b) => (
                                     <li
@@ -303,7 +412,7 @@ export default function AdminDashboard() {
                                         onMouseLeave={() => setHoveredBanner(null)}
                                         className="relative group cursor-pointer"
                                     >
-                                        <img src={b.url} alt="banner" className="w-40 rounded-md" />
+                                        <img src={b.url} alt="banner" className="w-[500px] rounded-md" />
                                         {hoveredBanner === b.id && (
                                             <button
                                                 onClick={() => handleDeleteBanner(category.label, b.id, b.url)}
@@ -317,107 +426,28 @@ export default function AdminDashboard() {
                             </ul>
                         </section>
 
-                        {/* Frota */}
-                        <section className="space-y-2">
-                            <h3 className="text-xl font-semibold mb-2">Frota</h3>
-                            <div className="relative">
-                                <Input
-                                    placeholder="Categoria"
-                                    value={newFleet[category.label]?.category || ""}
-                                    onChange={(e) => {
-                                        setSearchCategory(fleet[category.label]?.filter(el => el.category?.toLowerCase()?.includes(newFleet[category.label]?.category?.toLowerCase())))
-                                        setNewFleet((prev) => ({
-                                            ...prev,
-                                            [category.label]: { ...prev[category.label], category: e.target.value },
-                                        }))
-                                    }}
-                                />
-                                {/* {Boolean(searchCategory.length) && <div className="absolute top-10 bg-black text-white flex flex-column">
-                                    {
-                                        Array.from(new Set(searchCategory?.map(el => JSON.stringify(el))))?.map(el => JSON.parse(el))?.map(el => <span key={el._id} className="p-2">{el.category}</span>)
-                                    }
-                                </div>} */}
-                            </div>
-                            <Input
-                                placeholder="Marca"
-                                value={newFleet[category.label]?.brand || ""}
-                                onChange={(e) =>
-                                    setNewFleet((prev) => ({
-                                        ...prev,
-                                        [category.label]: { ...prev[category.label], brand: e.target.value },
-                                    }))
-                                }
-                            />
-                            <Input
-                                placeholder="Modelo"
-                                value={newFleet[category.label]?.model || ""}
-                                onChange={(e) =>
-                                    setNewFleet((prev) => ({
-                                        ...prev,
-                                        [category.label]: { ...prev[category.label], model: e.target.value },
-                                    }))
-                                }
-                            />
-                            <Input
-                                className="mb-4"
-                                placeholder="Descrição"
-                                value={newFleet[category.label]?.description || ""}
-                                onChange={(e) =>
-                                    setNewFleet((prev) => ({
-                                        ...prev,
-                                        [category.label]: { ...prev[category.label], description: e.target.value },
-                                    }))
-                                }
-                            />
-                            <Label htmlFor={`fleet-${category.label}`}>Escolher imagem do veículo</Label>
-                            <Input
-                                id={`fleet-${category.label}`}
-                                hidden
-                                type="file"
-                                onChange={(e) => handleFileSelect(e.target.files?.[0] || null, (file) =>
-                                    setNewFleet((prev) => ({
-                                        ...prev,
-                                        [category.label]: { ...prev[category.label], image: file },
-                                    }))
-                                )}
-                            />
-                            {newFleet[category.label]?.image && (
-                                <img src={getPreviewUrl(newFleet[category.label].image)} alt="preview veículo" className="w-40 my-2" />
-                            )}
-                            <div className="pt-5">
-                                <Label htmlFor={`fleet-aux-${category.label}`}>Escolher imagens auxiliares</Label>
-                                <Input
-                                    id={`fleet-aux-${category.label}`}
-                                    hidden
-                                    type="file"
-                                    onChange={(e) => handleFileSelect(e.target.files?.[0] || null, (file) =>
-                                        setNewFleet((prev) => ({
-                                            ...prev,
-                                            [category.label]: { ...prev[category.label], imagesAux: [...(prev[category.label]?.imagesAux || []), file] },
-                                        }))
-                                    )}
-                                />
-                                <div className="flex gap-2 flex-wrap">
-                                    {newFleet[category.label]?.imagesAux?.map((el, index) =>
-                                        <img key={index} src={getPreviewUrl(el)} alt="preview veículo" className="w-20 my-2 object-cover" />
-                                    )}
-                                </div>
-                            </div>
-
-                            <Button disabled={!(Boolean(newFleet[category.label]?.image) && newFleet[category.label]?.brand && newFleet[category.label]?.model)} className="mt-4" color={category.color} onClick={() => handleAddFleet(category)}>Adicionar Veículo</Button>
-                            <ul className="mt-2 space-y-2">
+                        {/* Listagem frota */}
+                        <section>
+                            <h3 className="text-3xl font-semibold">Frota</h3>
+                            <ul className="mt-2 flex gap-5 flex-wrap w-full">
                                 {(fleet[category.label] || []).map((f) => (
                                     <li
                                         key={f.id}
                                         onMouseEnter={() => setHoveredFleet(f.id)}
                                         onMouseLeave={() => setHoveredFleet(null)}
-                                        className="flex gap-2 items-center relative w-fit">
-                                        <img src={f.image} alt="frota" className="w-20" />
-                                        <div>
-                                            <p className="font-semibold">{f.brand}</p>
-                                            <p className="font-semibold">{f.model}</p>
-                                            <p>{f.description}</p>
+                                        className="flex flex-col gap-3 relative p-4 border w-full rounded-md lg:w-[32%]">
+                                        <img src={f.image} alt="frota" className="w-80" />
+                                        <p>Marca:&nbsp;<span className="font-semibold">{f.brand}</span></p>
+                                        <p>Modelo:&nbsp;<span className="font-semibold">{f.model}</span></p>
+                                        <div className="flex flex-col gap-2">
+                                            <h3 className="font-semibold text-xl">Galeria</h3>
+                                            <div className="flex gap-2 flex-wrap">
+                                                {f.imagesAux?.map((el, index) =>
+                                                    <img key={index} src={el} alt="frota" className="w-40 h-32 object-cover" />
+                                                )}
+                                            </div>
                                         </div>
+                                        <p>{f.description}</p>
                                         {hoveredFleet === f.id && (
                                             <button
                                                 onClick={() => handleDeleteFleet(category.label, f.id, f.image, f.imagesAux)}
@@ -433,6 +463,7 @@ export default function AdminDashboard() {
                     </div>
                 ))}
             </section>
+
 
             {/* Blog */}
             <BlogSection blogPosts={blogPosts} handleAddPost={handleAddPost} />

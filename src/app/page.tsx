@@ -326,7 +326,7 @@ export default function Home() {
                     alt={`Interior ${img}`}
                     width={200}
                     height={100}
-                    className="w-full h-full object-cover"
+                    className="w-full h-[200px] object-cover"
                   />
                 </div>
               ))}

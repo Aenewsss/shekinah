@@ -15,6 +15,25 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Estilo da scrollbar para navegadores WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 4px;              /* Largura da barra vertical */
+  height: 4px;             /* Altura da barra horizontal */
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f0f0;     /* Cor do "trilho" */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;        /* Cor da barra */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;        /* Cor ao passar o mouse */
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
