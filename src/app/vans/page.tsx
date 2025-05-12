@@ -345,20 +345,20 @@ export default function VansPage() {
                             }
                         </div>
 
-                        <div className="md:grid md:grid-cols-4 gap-4 mb-8 -mt-10 flex overflow-auto">
+                        <div className="md:grid md:grid-cols-4 gap-4 mb-8 md:-mt-10 flex overflow-auto">
                             {fleets[currentFleet]?.imagesAux?.map((img) => (
-                                <div key={img} className="border-2 border-white rounded-lg lg:w-full sm:min-w-1/2 min-w-full">
+                                <div key={img} className="border-2 border-white rounded-lg lg:w-full min-w-1/2 transition-opacity duration-500 opacity-0 animate-fade-in">
                                     <Image
-                                        unoptimized
                                         src={img}
                                         alt={`Interior ${img}`}
                                         width={200}
                                         height={100}
+                                        priority
                                         className="w-full md:h-[200px] h-50 object-cover"
                                     />
                                 </div>
                             ))}
-                        </div>
+                    </div>
 
                         <div className="text-center">
                             <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center">

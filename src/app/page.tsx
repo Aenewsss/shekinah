@@ -322,9 +322,9 @@ export default function Home() {
               }
             </div>
 
-            <div className="md:grid md:grid-cols-4 gap-4 mb-8 -mt-10 flex overflow-auto">
+            <div className="md:grid md:grid-cols-4 gap-4 mb-8 md:-mt-10 flex overflow-auto">
               {fleets[currentFleet]?.imagesAux?.map((img) => (
-                <div key={img} className="border-2 border-white rounded-lg lg:w-full sm:min-w-1/2 min-w-full transition-opacity duration-500 opacity-0 animate-fade-in">
+                <div key={img} className="border-2 border-white rounded-lg lg:w-full min-w-1/2 transition-opacity duration-500 opacity-0 animate-fade-in">
                   <Image
                     src={img}
                     alt={`Interior ${img}`}
