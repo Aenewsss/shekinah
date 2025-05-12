@@ -18,21 +18,26 @@ body {
 
 /* Estilo da scrollbar para navegadores WebKit (Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
-  width: 4px;              /* Largura da barra vertical */
-  height: 4px;             /* Altura da barra horizontal */
+  width: 4px;
+  /* Largura da barra vertical */
+  height: 4px;
+  /* Altura da barra horizontal */
 }
 
 ::-webkit-scrollbar-track {
-  background: #f0f0f0;     /* Cor do "trilho" */
+  background: #f0f0f0;
+  /* Cor do "trilho" */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;        /* Cor da barra */
+  background: #888;
+  /* Cor da barra */
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;        /* Cor ao passar o mouse */
+  background: #555;
+  /* Cor ao passar o mouse */
 }
 
 @layer utilities {
@@ -77,6 +82,7 @@ body {
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -110,6 +116,19 @@ body {
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0
+  }
+  100% {
+    opacity: 1
   }
 }
 

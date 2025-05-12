@@ -104,7 +104,7 @@ export default function AdminDashboard() {
 
             const auxUrls = await Promise.all(fleetData?.imagesAux?.map(async el => {
                 const storageReference = storageRef(storage, `fleet/${category.label}/${el.name}`);
-                await uploadBytes(storageReference, el);
+                await uploadBytes(storageReference, el, {cacheControl: 'public,max-age=31536000'});
                 const url = await getDownloadURL(storageReference);
                 return url
             }))
