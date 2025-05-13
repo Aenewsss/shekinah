@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from "react";
-import { ref, onValue, push, remove } from "firebase/database";
+import { ref, onValue, push, remove, get, update, set } from "firebase/database";
 import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
@@ -89,8 +89,50 @@ export default function AdminDashboard() {
         setShowAddFleet(true)
     }
 
-    function handleUpdateFleet(category: string) {
+    async function handleUpdateFleet(categoryLabel: string) {
+        setLoading(true)
+        try {
+            const fleetData = newFleet[categoryLabel];
+            if (!fleetData?.image || !fleetData?.imagesAux) return;
 
+            let url
+            if (typeof fleetData.image != 'string') {
+                const storageReference = storageRef(storage, `fleet/${categoryLabel}/${generateUniqueImageId(fleetData.image)}`);
+                await uploadBytes(storageReference, fleetData.image);
+                url = await getDownloadURL(storageReference);
+            } else {
+                url = fleetData.image
+            }
+
+            const auxUrls = await Promise.all(fleetData?.imagesAux?.map(async el => {
+                if (typeof el != 'string') {
+                    const storageReference = storageRef(storage, `fleet/${categoryLabel}/${generateUniqueImageId(el)}`);
+                    await uploadBytes(storageReference, el, { cacheControl: 'public,max-age=31536000' });
+                    return await getDownloadURL(storageReference);
+                } return el
+            }))
+
+            await set(ref(db, `fleet/${categoryLabel}/${fleetData.id}`), {
+                brand: fleetData?.brand,
+                model: fleetData?.model,
+                description: fleetData?.description || "",
+                image: url,
+                category: fleetData?.category,
+                imagesAux: auxUrls
+            });
+            toast.success("Veículo alterado com sucesso!");
+            setShowAddFleet(false)
+        } catch (error) {
+
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    function generateUniqueImageId(file: File): string {
+        const extension = file.name.split('.').pop(); // pega extensão original
+        const uniqueId = crypto.randomUUID(); // gera id único
+        return `${uniqueId}.${extension}`; // ex: 72fa56dc-3e9b-4b15-b0f0-68e1b8fd13ef.jpg
     }
 
     const handleAddFleet = async (category) => {
@@ -103,8 +145,8 @@ export default function AdminDashboard() {
             const url = await getDownloadURL(storageReference);
 
             const auxUrls = await Promise.all(fleetData?.imagesAux?.map(async el => {
-                const storageReference = storageRef(storage, `fleet/${category.label}/${el.name}`);
-                await uploadBytes(storageReference, el, {cacheControl: 'public,max-age=31536000'});
+                const storageReference = storageRef(storage, `fleet/${category.label}/${generateUniqueImageId(el)}`);
+                await uploadBytes(storageReference, el, { cacheControl: 'public,max-age=31536000' });
                 const url = await getDownloadURL(storageReference);
                 return url
             }))
@@ -256,6 +298,22 @@ export default function AdminDashboard() {
         );
     }
 
+    async function handleRemoveImageAux(image: string | File, categoryLabel: string, fleetId: string) {
+        console.log(image, categoryLabel, fleetId)
+        if (typeof image == 'string') {
+            const urlPath = new URL(image).pathname;
+            const storagePath = decodeURIComponent(urlPath.split("/o/")[1]); // preserva as barras
+
+            const storageReference = storageRef(storage, storagePath);
+            deleteObject(storageReference);
+        }
+
+        const fleetRef = ref(db, `/fleet/${categoryLabel}/${fleetId}/imagesAux`)
+        const result = await get(fleetRef)
+        const data = result.val().filter(el => el != image)
+        await set(fleetRef, data);
+    }
+
     return (
         <main className="p-4 py-10 space-y-20 relative">
             {loading && <Loader />}
@@ -317,7 +375,7 @@ export default function AdminDashboard() {
                                 <div className="flex justify-between mb-4 items-center">
                                     <h3 className="text-xl font-semibold mb-0 p-0">Novo veículo</h3>
                                     <Button disabled={!(Boolean(newFleet[category.label]?.image) && newFleet[category.label]?.brand && newFleet[category.label]?.model)} className="mt-4" color={category.color} onClick={() => {
-                                        newFleet[category.label]?.id ? handleAddFleet(category) : handleUpdateFleet(category.label)
+                                        newFleet[category.label]?.id ? handleUpdateFleet(category.label) : handleAddFleet(category)
                                     }}>{newFleet[category.label]?.id ? 'Editar' : 'Adicionar'} Veículo</Button>
                                 </div>
                                 <div className="flex flex-col gap-2">
@@ -407,7 +465,15 @@ export default function AdminDashboard() {
                                         />
                                         <div className="flex gap-2 flex-wrap">
                                             {newFleet[category.label]?.imagesAux?.map((el, index) =>
-                                                <img key={index} src={typeof el == 'string' ? el : getPreviewUrl(el)} alt="preview veículo" className="w-[300px] my-2 object-cover" />
+                                                <div key={index} className="flex gap-2">
+                                                    <img src={typeof el == 'string' ? el : getPreviewUrl(el)} alt="preview veículo" className="w-[300px] my-2 object-cover" />
+                                                    <button
+                                                        onClick={() => handleRemoveImageAux(el, category.label, newFleet[category.label].id)}
+                                                        className=" cursor-pointer hover:scale-105 transition-all bg-red-600 text-white rounded-full text-xs flex items-center shadow hover:bg-red-700 self-center p-2"
+                                                    >
+                                                        × Excluir Imagem
+                                                    </button>
+                                                </div>
                                             )}
                                         </div>
                                     </div>
