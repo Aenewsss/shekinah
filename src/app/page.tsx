@@ -25,6 +25,7 @@ import { useFleets } from "@/hooks/useFleets.hook"
 import { useBlog } from "@/hooks/useBlog"
 import WhatsApp from "@/components/whatsapp"
 import Head from "next/head"
+import { getImageFromCdn } from "@/utils/get-image-cdn"
 
 export default function Home() {
   const banners = useBanners("executivos"); // 🔸 categoria de banner
@@ -83,7 +84,7 @@ export default function Home() {
           {banners[currentBanner] && (
             <Image
               unoptimized
-              src={banners[currentBanner]}
+              src={getImageFromCdn(banners[currentBanner])}
               alt={`Banner ${currentBanner + 1}`}
               fill
               className="object-cover brightness-50 transition-opacity duration-700 ease-in-out"
@@ -300,7 +301,7 @@ export default function Home() {
               </div> */}
               <Image
                 priority
-                src={fleets[currentFleet]?.image || "/mercedez.png?height=400&width=800"}
+                src={getImageFromCdn(fleets[currentFleet]?.image) || "/mercedez.png?height=400&width=800"}
                 alt="Mercedes S580"
                 width={800}
                 height={400}
@@ -326,7 +327,7 @@ export default function Home() {
               {fleets[currentFleet]?.imagesAux?.map((img) => (
                 <div key={img} className="border-2 border-white rounded-lg lg:w-full min-w-1/2 transition-opacity duration-500 opacity-0 animate-fade-in">
                   <Image
-                    src={img}
+                    src={getImageFromCdn(img)}
                     alt={`Interior ${img}`}
                     width={200}
                     height={100}
@@ -424,7 +425,7 @@ export default function Home() {
                   <div className="relative">
                     <Image
                       unoptimized
-                      src={post?.image}
+                      src={getImageFromCdn(post?.image)}
                       alt={`Blog post ${post}`}
                       width={500}
                       height={550}
