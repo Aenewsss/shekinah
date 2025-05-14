@@ -206,24 +206,18 @@ export default function BlindadosPage() {
                 </div>
                 <div className="relative z-1 container mx-auto px-4 h-full flex flex-col justify-center">
                     <div className="max-w-2xl">
-                        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                            BLINDAGEM E SOFISTICAÇÃO
-                            <br />
-                            NO SEU TRANSPORTE
+                        <h1 className="text-4xl uppercase md:text-5xl font-bold mb-4">
+                            Blindados de Alto Padrão para quem exige segurança
                         </h1>
                         <p className="text-lg mb-6">
-                            Alugue SUVs e sedans blindados com serviço de qualidade
-                            <br />e motoristas para seus trajetos.
+                            Carros blindados com sofisticação e atendimento executivo sob medida.
                         </p>
-                        <div className="flex flex-wrap gap-4">
-                            <a href={process.env.NEXT_PUBLIC_WPP}
-                                className="bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
-                                onClick={() => setShowVerification(true)}
-                            >
-                                FAÇA UM ORÇAMENTO
+                        <div className="flex gap-2 flex-wrap uppercase">
+                            <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                                Solicitar Orçamento no WhatsApp
                             </a>
-                            <a href={process.env.NEXT_PUBLIC_WPP} className="border border-white text-white px-8 py-3 rounded-md font-medium hover:bg-white/10 transition-colors">
-                                CONHEÇA NOSSA FROTA
+                            <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                                Solicitar Orçamento por email
                             </a>
                         </div>
                     </div>
@@ -236,30 +230,30 @@ export default function BlindadosPage() {
                             <div className="bg-black/60 backdrop-blur-sm p-3 rounded-md">
                                 <div className="flex items-center mb-2">
                                     <Shield className="text-[#0168ec] mr-2" size={20} />
-                                    <span className="text-sm font-medium">Blindagem Nível III-A</span>
+                                    <span className="text-sm font-medium">Frota blindada de alto padrão</span>
                                 </div>
-                                <p className="text-xs text-gray-300">Proteção contra armas de fogo de alto calibre</p>
+                                {/* <p className="text-xs text-gray-300">Proteção contra armas de fogo de alto calibre</p> */}
                             </div>
                             <div className="bg-black/60 backdrop-blur-sm p-3 rounded-md">
                                 <div className="flex items-center mb-2">
                                     <UserCheck className="text-[#0168ec] mr-2" size={20} />
-                                    <span className="text-sm font-medium">Motoristas Treinados</span>
+                                    <span className="text-sm font-medium">Motoristas experientes e treinados</span>
                                 </div>
-                                <p className="text-xs text-gray-300">Profissionais com curso de direção defensiva</p>
+                                {/* <p className="text-xs text-gray-300">Profissionais com curso de direção defensiva</p> */}
                             </div>
                             <div className="bg-black/60 backdrop-blur-sm p-3 rounded-md">
                                 <div className="flex items-center mb-2">
                                     <Award className="text-[#0168ec] mr-2" size={20} />
-                                    <span className="text-sm font-medium">Veículos Premium</span>
+                                    <span className="text-sm font-medium">Segurança e discrição</span>
                                 </div>
-                                <p className="text-xs text-gray-300">Frota de luxo com máximo conforto</p>
+                                {/* <p className="text-xs text-gray-300">Frota de luxo com máximo conforto</p> */}
                             </div>
                             <div className="bg-black/60 backdrop-blur-sm p-3 rounded-md">
                                 <div className="flex items-center mb-2">
                                     <Headphones className="text-[#0168ec] mr-2" size={20} />
-                                    <span className="text-sm font-medium">Suporte 24h</span>
+                                    <span className="text-sm font-medium">Atendimento VIP e sob medida</span>
                                 </div>
-                                <p className="text-xs text-gray-300">Assistência completa durante todo o serviço</p>
+                                {/* <p className="text-xs text-gray-300">Assistência completa durante todo o serviço</p> */}
                             </div>
                         </div>
                     </div>
@@ -622,7 +616,7 @@ export default function BlindadosPage() {
                             <div className="p-4">
                                 <h3 className="text-lg font-bold mb-2 text-center">Carros Populares</h3>
                                 <p className="text-sm text-gray-400 text-center">
-                                    Clique e saiba mais sobre a categoria de carros populares disponíveis em nosso modelo.
+                                    Economia com qualidade e praticidade.
                                 </p>
                             </div>
                         </a>
@@ -641,7 +635,7 @@ export default function BlindadosPage() {
                             <div className="p-4">
                                 <h3 className="text-lg font-bold mb-2 text-center">Carros Blindados</h3>
                                 <p className="text-sm text-gray-400 text-center">
-                                    Clique e saiba mais sobre a categoria de carros blindados disponíveis em nosso modelo.
+                                    Segurança e conforto para executivos, diplomatas e agendas de alto padrão.
                                 </p>
                             </div>
                         </a>
@@ -660,7 +654,7 @@ export default function BlindadosPage() {
                             <div className="p-4">
                                 <h3 className="text-lg font-bold mb-2 text-center">Vans</h3>
                                 <p className="text-sm text-gray-400 text-center">
-                                    Clique e saiba mais sobre a categoria de vans disponíveis em nosso modelo.
+                                    Ideal para eventos, empresas e traslados com conforto, espaço e pontualidade.
                                 </p>
                             </div>
                         </a>

@@ -110,18 +110,23 @@ export default function Home() {
         <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center">
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              EXPERIÊNCIA EXECUTIVA
+              Soluções completas
               <br />
-              SOBRE RODAS
+              em locação de veículos
             </h1>
             <p className="text-lg mb-6">
-              ALUGUEL DE CARROS EXECUTIVOS COM SOFISTICAÇÃO, CONFORTO
+              Carros de Luxo, Blindados, Populares e Vans
               <br />
-              E PONTUALIDADE PARA SEUS TRAJETOS.
+              com atendimento nacional.
             </p>
-            <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
-              FAÇA UM ORÇAMENTO
-            </a>
+            <div className="flex gap-2 flex-wrap uppercase">
+              <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                Solicitar Orçamento no WhatsApp
+              </a>
+              <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                Solicitar Orçamento por email
+              </a>
+            </div>
           </div>
         </div>
         {/* Dots navigation */}
@@ -142,19 +147,19 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
             <div className="flex flex-col items-center justify-center">
               <UserCheck className="mb-2" size={24} />
-              <span className="text-sm">MOTORISTAS QUALIFICADOS</span>
+              <span className="text-sm uppercase">MOTORISTAS QUALIFICADOS</span>
             </div>
             <div className="flex flex-col items-center justify-center">
               <Users className="mb-2" size={24} />
-              <span className="text-sm">ATENDIMENTO PERSONALIZADO</span>
+              <span className="text-sm uppercase">Frota Diversificada</span>
             </div>
             <div className="flex flex-col items-center justify-center">
               <Car className="mb-2" size={24} />
-              <span className="text-sm">CARROS BLINDADOS</span>
+              <span className="text-sm uppercase">Atendimento Personalizado</span>
             </div>
             <div className="flex flex-col items-center justify-center">
               <Truck className="mb-2" size={24} />
-              <span className="text-sm">LOGÍSTICA DE TRANSPORTE</span>
+              <span className="text-sm uppercase">LOGÍSTICA INTELIGENTE</span>
             </div>
           </div>
         </div>
@@ -190,8 +195,11 @@ export default function Home() {
             <h2 className="text-2xl font-bold mb-6 text-[#0168ec]">MAS AFINAL, QUEM SOMOS NÓS?</h2>
             <div className="text-gray-300 space-y-4">
               <p>
-                A <span className="font-black">SHEKINAH LOCAÇÃO DE VEÍCULOS</span> É UMA EMPRESA FUNDADA POR BRENDA E LUCAS, ESPECIALIZADA EM ALUGUEL DE
-                CARROS E TRANSPORTE EXECUTIVO.
+                A <span className="font-black">Shekinah Locação de Veículos</span> é uma empresa especializada em soluções de mobilidade sob medida, atuando com excelência no segmento de transporte executivo, blindado e econômico.
+                Atendemos clientes corporativos, diplomáticos e particulares em todo o Brasil, com uma frota diversificada e motoristas altamente qualificados.
+
+                Nosso compromisso é oferecer uma experiência segura, pontual e sofisticada — seja em eventos, traslados, locações de curto ou longo prazo, com ou sem motorista.
+                Com presença nas principais capitais do país, seguimos com o propósito de entregar mais do que transporte: entregamos confiança, discrição e profissionalismo em cada trajeto.
               </p>
             </div>
           </div>
@@ -213,13 +221,10 @@ export default function Home() {
               />
             </div>
             <div className="order-1 md:order-2">
-              <h2 className="text-2xl font-bold mb-6 text-[#0168ec]">QUAIS SERVIÇOS OFERECEMOS?</h2>
+              <h2 className="text-2xl font-bold mb-6 text-[#0168ec]">Transporte Executivo com Vans</h2>
               <div className="text-gray-300 space-y-4">
-                <p>OFERECEMOS SERVIÇOS DE TRANSPORTE DE NOIVA, VIAGENS, CITY TOUR.</p>
-                <p>RECEPÇÃO DE AEROPORTOS COM MOTORISTA ALTAMENTE QUALIFICADO.</p>
                 <p>
-                  PROPORCIONANDO MAIS COMODIDADE AOS NOSSOS CLIENTES, ALÉM DISSO, TEMOS CARROS BLINDADOS, DISPONÍVEIS
-                  PARA O TRANSPORTE DE AUTORIDADES NACIONAIS E INTERNACIONAIS, DIPLOMATAS.
+                  Soluções sob medida para empresas, eventos e grupos que exigem conforto, pontualidade e logística eficiente. Nossa frota de vans executivas conta com motoristas treinados e estrutura ideal para atender comitivas, traslados e agendas personalizadas em todo o Brasil.
                 </p>
               </div>
             </div>
@@ -233,17 +238,11 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="flex flex-col">
               <h2 className="text-2xl font-bold mb-6 text-[#0168ec]">
-                ESTAMOS LOCALIZADOS EM
-                <br />
-                BRASÍLIA - DF
+                Transporte Executivo com Blindados
               </h2>
               <div className="text-gray-300 space-y-4">
                 <p>
-                  OFERECEMOS EXPERIÊNCIA EM MOBILIDADE, SERVIÇOS DE QUALIDADE E ATENDIMENTO PERSONALIZADO E INDIVIDUAL,
-                  GARANTINDO A SUA SATISFAÇÃO.
-                </p>
-                <p>
-                  TEMOS UMA FROTA MODERNA E EXECUTIVA EM PERFEITO ESTADO PARA OFERECER O MELHOR CONFORTO E SEGURANÇA.
+                  Atendimento exclusivo para quem prioriza segurança, discrição e alto padrão. Oferecemos veículos blindados modernos, com condutores experientes e serviço executivo sob medida, ideal para compromissos diplomáticos, executivos e demandas estratégicas.
                 </p>
               </div>
               <a href={process.env.NEXT_PUBLIC_WPP} className="flex self-start cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors mt-8">
@@ -482,7 +481,7 @@ export default function Home() {
               <div className="p-4">
                 <h3 className="text-lg font-bold mb-2 text-center">Carros Populares</h3>
                 <p className="text-sm text-gray-400 text-center">
-                  Clique e saiba mais sobre a categoria de carros populares disponíveis em nosso modelo.
+                  Economia com qualidade e praticidade.
                 </p>
               </div>
             </a>
@@ -501,7 +500,7 @@ export default function Home() {
               <div className="p-4">
                 <h3 className="text-lg font-bold mb-2 text-center">Carros Blindados</h3>
                 <p className="text-sm text-gray-400 text-center">
-                  Clique e saiba mais sobre a categoria de carros blindados disponíveis em nosso modelo.
+                  Segurança e conforto para executivos, diplomatas e agendas de alto padrão.
                 </p>
               </div>
             </a>
@@ -520,7 +519,7 @@ export default function Home() {
               <div className="p-4">
                 <h3 className="text-lg font-bold mb-2 text-center">Vans</h3>
                 <p className="text-sm text-gray-400 text-center">
-                  Clique e saiba mais sobre a categoria de vans disponíveis em nosso modelo.
+                  Ideal para eventos, empresas e traslados com conforto, espaço e pontualidade.
                 </p>
               </div>
             </a>

@@ -91,7 +91,7 @@ export default function PopularesPage() {
     const [currentBanner, setCurrentBanner] = useState(0);
     const itemsPerPage = 6;
     const [currentPage, setCurrentPage] = useState(0);
-    
+
     // Cálculo automático de start e end
     const start = currentPage * itemsPerPage;
     const end = start + itemsPerPage;
@@ -114,13 +114,13 @@ export default function PopularesPage() {
 
     function handleFleetChange(direction: "left" | "right") {
         const totalPages = Math.ceil(fleets.length / itemsPerPage);
-      
+
         if (direction === "left") {
-          setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+            setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
         } else {
-          setCurrentPage((prev) => (prev + 1) % totalPages);
+            setCurrentPage((prev) => (prev + 1) % totalPages);
         }
-      }
+    }
 
     return (
         <main className="min-h-screen bg-white text-black">
@@ -133,18 +133,17 @@ export default function PopularesPage() {
                                 <Image src="/logo-azul.svg" alt="Shekinah" width={180} height={45} className="mb-6" />
                             </a>
                             <h1 className="text-3xl md:text-4xl font-bold mb-4">
-                                Aluguel de carros, <br />
-                                sem <span className="text-[#0168ec]">Complicação</span>
+                                Aluguel de Carros Populares com Economia e Agilidade.
                             </h1>
                             <p className="text-gray-600 mb-6">
-                                Alugue carros populares com serviço de qualidade <br />e preços acessíveis para seus trajetos.
+                                Frota econômica, locação simplificada e suporte onde você estiver.
                             </p>
-                            <div className="flex space-x-4">
-                                <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
-                                    FAÇA UM ORÇAMENTO
+                            <div className="flex gap-2 flex-wrap uppercase">
+                                <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                                    Solicitar Orçamento no WhatsApp
                                 </a>
-                                <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer border border-gray-300 text-gray-700 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors">
-                                    SAIBA MAIS
+                                <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                                    Solicitar Orçamento por email
                                 </a>
                             </div>
                         </div>
@@ -684,7 +683,7 @@ export default function PopularesPage() {
                             <div className="p-4">
                                 <h3 className="text-lg font-bold mb-2 text-center">Carros Populares</h3>
                                 <p className="text-sm text-center">
-                                    Clique e saiba mais sobre a categoria de carros populares disponíveis em nosso modelo.
+                                    Economia com qualidade e praticidade.
                                 </p>
                             </div>
                         </a>
@@ -703,7 +702,7 @@ export default function PopularesPage() {
                             <div className="p-4">
                                 <h3 className="text-lg font-bold mb-2 text-center">Carros Blindados</h3>
                                 <p className="text-sm text-center">
-                                    Clique e saiba mais sobre a categoria de carros blindados disponíveis em nosso modelo.
+                                    Segurança e conforto para executivos, diplomatas e agendas de alto padrão.
                                 </p>
                             </div>
                         </a>
@@ -722,7 +721,7 @@ export default function PopularesPage() {
                             <div className="p-4">
                                 <h3 className="text-lg font-bold mb-2 text-center">Vans</h3>
                                 <p className="text-sm text-center">
-                                    Clique e saiba mais sobre a categoria de vans disponíveis em nosso modelo.
+                                    Ideal para eventos, empresas e traslados com conforto, espaço e pontualidade.
                                 </p>
                             </div>
                         </a>

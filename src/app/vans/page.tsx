@@ -222,14 +222,13 @@ export default function VansPage() {
                             VANS DE ALTO PADRÃO
                         </h1>
                         <p className="text-lg mb-6">
-                            ALUGUE VANS EXECUTIVAS COM SERVIÇO DE QUALIDADE
-                            <br />E MOTORISTAS PARA SEUS TRAJETOS E EVENTOS.
+                            Ideal para eventos, empresas e grupos que precisam de conforto e pontualidade.
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <a href={process.env.NEXT_PUBLIC_WPP}
-                                className="bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
+                                className="bg-[#0168ec] text-white px-8 py-3 uppercase rounded-md font-medium hover:bg-blue-700 transition-colors"
                             >
-                                FAÇA UM ORÇAMENTO
+                                Solicitar Orçamento no WhatsApp
                             </a>
                             <a href={process.env.NEXT_PUBLIC_WPP} className="border border-white text-white px-8 py-3 rounded-md font-medium hover:bg-white/10 transition-colors">
                                 CONHEÇA NOSSA FROTA
@@ -245,30 +244,27 @@ export default function VansPage() {
                             <div className="bg-black/60 backdrop-blur-sm p-3 rounded-md">
                                 <div className="flex items-center mb-2">
                                     <Users className="text-[#0168ec] mr-2" size={20} />
-                                    <span className="text-sm font-medium">Motoristas Qualificados</span>
+                                    <span className="text-sm font-medium">Motoristas uniformizados e treinados</span>
                                 </div>
-                                <p className="text-xs text-gray-300">Profissionais com experiência e treinamento</p>
                             </div>
                             <div className="bg-black/60 backdrop-blur-sm p-3 rounded-md">
                                 <div className="flex items-center mb-2">
                                     <Truck className="text-[#0168ec] mr-2" size={20} />
-                                    <span className="text-sm font-medium">Vans Executivas</span>
+                                    <span className="text-sm font-medium">Vans modernas e espaçosas</span>
                                 </div>
-                                <p className="text-xs text-gray-300">Veículos de luxo com máximo conforto</p>
                             </div>
                             <div className="bg-black/60 backdrop-blur-sm p-3 rounded-md">
                                 <div className="flex items-center mb-2">
                                     <Calendar className="text-[#0168ec] mr-2" size={20} />
-                                    <span className="text-sm font-medium">Eventos</span>
+                                    <span className="text-sm font-medium">Atendimento para grupos e eventos</span>
                                 </div>
-                                <p className="text-xs text-gray-300">Transporte para eventos corporativos e sociais</p>
                             </div>
                             <div className="bg-black/60 backdrop-blur-sm p-3 rounded-md">
                                 <div className="flex items-center mb-2">
                                     <Headphones className="text-[#0168ec] mr-2" size={20} />
-                                    <span className="text-sm font-medium">Suporte 24h</span>
+                                    <span className="text-sm font-medium">Logística inteligente e flexível</span>
                                 </div>
-                                <p className="text-xs text-gray-300">Assistência completa durante todo o serviço</p>
+                                {/* <p className="text-xs text-gray-300">Assistência completa durante todo o serviço</p> */}
                             </div>
                         </div>
                     </div>
@@ -629,7 +625,7 @@ export default function VansPage() {
                             <div className="p-4">
                                 <h3 className="text-lg font-bold mb-2 text-center">Carros Populares</h3>
                                 <p className="text-sm text-gray-400 text-center">
-                                    Clique e saiba mais sobre a categoria de carros populares disponíveis em nosso modelo.
+                                    Economia com qualidade e praticidade.
                                 </p>
                             </div>
                         </a>
@@ -648,7 +644,7 @@ export default function VansPage() {
                             <div className="p-4">
                                 <h3 className="text-lg font-bold mb-2 text-center">Carros Blindados</h3>
                                 <p className="text-sm text-gray-400 text-center">
-                                    Clique e saiba mais sobre a categoria de carros blindados disponíveis em nosso modelo.
+                                    Segurança e conforto para executivos, diplomatas e agendas de alto padrão.
                                 </p>
                             </div>
                         </a>
@@ -667,7 +663,7 @@ export default function VansPage() {
                             <div className="p-4">
                                 <h3 className="text-lg font-bold mb-2 text-center">Vans</h3>
                                 <p className="text-sm text-gray-400 text-center">
-                                    Clique e saiba mais sobre a categoria de vans disponíveis em nosso modelo.
+                                    Ideal para eventos, empresas e traslados com conforto, espaço e pontualidade.
                                 </p>
                             </div>
                         </a>
