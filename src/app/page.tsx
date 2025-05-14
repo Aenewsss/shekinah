@@ -119,7 +119,7 @@ export default function Home() {
               <br />
               com atendimento nacional.
             </p>
-            <div className="flex gap-2 flex-wrap uppercase">
+            <div className="flex gap-2 md:flex-nowrap flex-wrap uppercase">
               <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
                 Solicitar Orçamento no WhatsApp
               </a>
@@ -192,9 +192,9 @@ export default function Home() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <h2 className="text-2xl font-bold mb-6 text-[#0168ec]">MAS AFINAL, QUEM SOMOS NÓS?</h2>
+            <h2 className="text-2xl font-bold mb-6 text-white">SOBRE NÓS</h2>
             <div className="text-gray-300 space-y-4">
-              <p>
+              <p className="text-lg">
                 A <span className="font-black">Shekinah Locação de Veículos</span> é uma empresa especializada em soluções de mobilidade sob medida, atuando com excelência no segmento de transporte executivo, blindado e econômico.
                 Atendemos clientes corporativos, diplomáticos e particulares em todo o Brasil, com uma frota diversificada e motoristas altamente qualificados.
 

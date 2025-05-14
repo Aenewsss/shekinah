@@ -212,7 +212,7 @@ export default function BlindadosPage() {
                         <p className="text-lg mb-6">
                             Carros blindados com sofisticação e atendimento executivo sob medida.
                         </p>
-                        <div className="flex gap-2 flex-wrap uppercase">
+                        <div className="flex gap-2 md:flex-nowrap flex-wrap uppercase">
                             <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
                                 Solicitar Orçamento no WhatsApp
                             </a>

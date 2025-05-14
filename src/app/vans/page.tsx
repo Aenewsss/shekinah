@@ -224,7 +224,7 @@ export default function VansPage() {
                         <p className="text-lg mb-6">
                             Ideal para eventos, empresas e grupos que precisam de conforto e pontualidade.
                         </p>
-                        <div className="flex flex-wrap gap-4">
+                        <div className="flex gap-2 md:flex-nowrap flex-wrap uppercase">
                             <a href={process.env.NEXT_PUBLIC_WPP}
                                 className="bg-[#0168ec] text-white px-8 py-3 uppercase rounded-md font-medium hover:bg-blue-700 transition-colors"
                             >
@@ -354,7 +354,7 @@ export default function VansPage() {
                                     />
                                 </div>
                             ))}
-                    </div>
+                        </div>
 
                         <div className="text-center">
                             <a href={process.env.NEXT_PUBLIC_WPP} className="cursor-pointer bg-[#0168ec] text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors inline-flex items-center">
